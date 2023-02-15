@@ -205,3 +205,141 @@ corrplot(wine.cor,
          hclust.method = "ward.D",       #<< clustering method
          addrect = 3)                    #<< 3 clusters defined
 ```
+
+
+## Heatmaps for Multivariate Data
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(seriation, dendextend, heatmaply, tidyverse)
+```
+
+### Importing Data
+
+```{r}
+wh <- read_csv("data/WHData-2018.csv")
+```
+
+### Data Preparation
+
+```{r}
+row.names(wh) <- wh$Country                   #<< change the rows by country name instead of row number
+
+wh1 <- dplyr::select(wh, c(3, 7:12))          #<< select interested column values
+
+wh_matrix <- data.matrix(wh)                  #<< transform into matrix
+```
+
+
+### Heatmap() of R Stats
+
+```{r}
+wh_heatmap <- heatmap(wh_matrix,
+                      scale="column",          #<< Scaling of values
+                      cexRow = 0.6,            #<< used to define the font size used for y-axis and x-axis labels 
+                      cexCol = 0.8,
+                      margins = c(10, 4))      #<< ensure that the entire x-axis labels are displayed completely
+```
+
+
+### Interactive Heatmap using HeatMaply
+
+```{r}
+heatmaply(wh_matrix[, -c(1, 2, 4, 5)],
+          scale = "column")                    #<< Scaling of values - when assumed normal distribution
+```
+
+```{r}
+heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]))
+#<< normalization is used when distribution is non-normal
+```
+
+
+### Visualizing Hierarchical Clustering 
+
+```{r}
+heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
+          dist_method = "euclidean",
+          hclust_method = "ward.D")
+```
+
+
+### Statistical Approach to Hierarchical Clustering
+
+Determining the best method
+
+```{r}
+wh_d <- dist(normalize(wh_matrix[, -c(1, 2, 4, 5)]), method = "euclidean")
+dend_expend(wh_d)[[3]]               #<< used to determine the recommended clustering method to be used - USE THE METHOD WITH THE HIGHEST OPTIMUM VALUE
+```
+
+Determining the optimal number of cluster
+
+```{r}
+wh_clust <- hclust(wh_d, method = "average")     #<< input based on best method
+num_k <- find_k(wh_clust)
+plot(num_k)
+```
+
+Cluster based on Optimum Inputs
+
+```{r}
+heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
+          dist_method = "euclidean",
+          hclust_method = "average",
+          k_row = 3)
+```
+
+
+### Optimal Leaf Ordering (OLO) - Alt Method for Ordering Constraints due to HClustering
+
+```{r}
+heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
+          seriate = "GW")                     #<< seriate = OLO or GW
+```
+
+
+### Working with Colour Palettes
+
+```{r}
+heatmaply(normalize(wh_matrix[, -c(1, 2, 4, 5)]),
+          Colv=NA,
+          seriate = "none",
+          colors = Blues,                         #<< heatmap colour themes
+          k_row = 5,                              #<< 5 clusters
+          margins = c(NA,200,60,NA),              #<< change the top margin to 60 and row margin to 200   
+          fontsize_row = 4,                       #<< change the font size for row and column labels
+          fontsize_col = 5,
+          main="World Happiness Score and Variables by Country, 2018 \nDataTransformation using Normalise Method",
+          xlab = "World Happiness Indicators",
+          ylab = "World Countries"
+          )
+```
+
+
+## Parallel Coordinates Plots
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(GGally, parallelPlot, tidyverse)
+```
+
+### Importing Data
+
+```{r}
+wh <- read_csv("data/WHData-2018.csv")
+```
+
+### Plotting Static Parallel Coordinates Plot
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Parallel Coordinates Plot of World Happines Variables")
+```
