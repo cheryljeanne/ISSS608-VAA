@@ -12,5 +12,33 @@
     "title": "ISSS608-VAA",
     "section": "",
     "text": "Welcome to ISSS608 - Visual Analytics and Applications homepage. In this website, you will find my coursework prepared for this course."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
+    "title": "Hands-on Exercise 1",
+    "section": "",
+    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
+    "title": "Hands-on Exercise 2",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, patchwork, \n               ggthemes, hrbrthemes,\n               ggrepel) \n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
+    "title": "In Class Exercise 04",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#running-code",
+    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#running-code",
+    "title": "In Class Exercise 04",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
   }
 ]
