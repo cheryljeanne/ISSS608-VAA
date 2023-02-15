@@ -374,7 +374,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">title                =</span> <span class="st">"Comparison of Resale Price (in S$'000) by Flat Type (2022)"</span>,  <span class="co">#&lt;&lt; Plot Title</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption              =</span> <span class="st">"Source: Data.gov.sg"</span>,                                         <span class="co">#&lt;&lt; Caption</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">type                 =</span> <span class="st">"p"</span>,                                                           <span class="co">#&lt;&lt; type of statistical test: parametric</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.plotting        =</span> <span class="cn">TRUE</span>,                                                          <span class="co"># whether the mean is to be displayed</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean.plotting        =</span> <span class="cn">TRUE</span>,                                                          <span class="co">#&lt;&lt; whether the mean is to be displayed</span></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">outlier.tagging      =</span> <span class="cn">TRUE</span>,                                                          <span class="co">#&lt;&lt; whether outliers should be flagged</span></span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">outlier.coef         =</span> <span class="dv">3</span>,                                                             <span class="co">#&lt;&lt; outlier coeff - configured to display extreme outliers</span></span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">outlier.label        =</span> town,                                                          <span class="co">#&lt;&lt; label to attach to outlier values</span></span>
@@ -391,7 +391,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong><em>Resale prices are currently over-valued across all flat types.</em></strong></p>
 <p>From the plot, we are able to see that the distribution is positively skewed across all 3 flat types, where the mean &gt; median. This means that the data constitutes a higher frequency of high valued resale transaction prices.</p>
 <p><strong><em>4-Room and 5-Room Flats are more over-valued</em></strong></p>
-<p>The mean, identified by the red dot in the plot, appears to be further away for 4-Room and 5-Room flats vs 3-Room flat, which indicates the higher demand for bigger houses.</p>
+<p>The mean, identified by the red dot in the plot, appears to be further away for 4-Room and 5-Room flats vs 3-Room flat, which implies the higher price premium imposed on the demand for bigger houses.</p>
 <p><strong><em>Resale prices across flat types is statistically different</em></strong></p>
 <p>Given that the p-value is smaller than the alpha level, the null hypothesis is rejected and we can statistically validate that there are indeed differences in the resale prices across flat types.</p>
 <p><strong><em>Pricing in of location premium</em></strong></p>
@@ -588,7 +588,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><strong><em>Removal of variables with high collinearity</em></strong></p>
 <p>Flat type and lease commencement date were identified to be variables with high collinearity, which may distort the model performance. As such, these were removed in the re-calibrated model.</p>
 <p><strong><em>Significant Attributes Contributing to the model</em></strong></p>
-<p>The remaining attributes are validated to be statistically significant (p-value &lt; 0.05): floor_area_sqm, remaining_lease, storey_mean, SD_Resale_Px, Mean_Resale_Px, No_of_txn. The remaining lease and floor level of HDB unit appears to be top variables in determining the HDB resale prices.</p>
+<p>The remaining attributes are validated to be statistically significant (p-value &lt; 0.05): floor_area_sqm, remaining_lease, storey_mean, SD_Resale_Px, Mean_Resale_Px, No_of_txn. The remaining lease and floor level of HDB unit appears to be top variables in determining the HDB resale prices. For instance, for every 1 year increase in remaining lease of the property, the resale price is expected to increase by ~$3698, while for every 1 level increase in floor level, the resale price is expected to increase by ~$4967.</p>
 <p><strong><em>Low AIC and BIC</em></strong></p>
 <p>The low AIC and BIC values are indicative of a good overall model fit.</p>
 
