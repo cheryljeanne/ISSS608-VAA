@@ -1,0 +1,207 @@
+---
+title: "Hands On Exercise 05"
+author: "Cheryl Jeanne Chiew"
+date: "12 February 2023"
+date-modified: "`r Sys.Date()`"
+execute:
+  echo: true
+  eval: true
+  warning: false
+format: html
+editor: visual
+---
+
+## Building Ternary Plots
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(ggtern, plotly, tidyverse)
+```
+
+### Importing Data
+
+```{r}
+pop_data <- read_csv("data/respopagsex2000to2018_tidy.csv") 
+```
+
+### Data Preparation
+
+```{r}
+agpop_mutated <- pop_data %>%
+  mutate(`Year` = as.character(Year))%>%          #<< change datatype of YEAR to character
+  pivot_wider(names_from = AG, 
+              values_from = Population) %>%       #<< transpose values from AG into columns
+  mutate(YOUNG = rowSums(.[4:8]))%>%              #<< sum of values by rows
+  mutate(ACTIVE = rowSums(.[9:16]))  %>%
+  mutate(OLD = rowSums(.[17:21])) %>%
+  mutate(TOTAL = rowSums(.[22:24])) %>%
+  filter(Year == 2018)%>%                         #<< filter for Year 2018 only
+  filter(TOTAL > 0)                               #<< filter where total count > 0
+```
+
+### Ternary Plot
+
+```{r}
+ggtern::ggtern(data=agpop_mutated, aes(x=YOUNG,y=ACTIVE, z=OLD)) +
+  geom_point() +
+  labs(title="Population structure, 2015") +
+  theme_rgbw()
+```
+
+### Interactive Ternary Plot
+
+```{r}
+label <- function(txt) {
+  list(
+    text = txt, 
+    x = 0.1, y = 1,
+    ax = 0, ay = 0,
+    xref = "paper", yref = "paper", 
+    align = "center",
+    font = list(family = "serif", size = 15, color = "white"),
+    bgcolor = "#b3b3b3", bordercolor = "black", borderwidth = 2
+  )
+}
+
+axis <- function(txt) {
+  list(
+    title = txt, tickformat = ".0%", tickfont = list(size = 10)
+  )
+}
+
+ternaryAxes <- list(
+  aaxis = axis("Young"), 
+  baxis = axis("Active"), 
+  caxis = axis("Old")
+)
+
+plot_ly(
+  agpop_mutated, 
+  a = ~YOUNG, 
+  b = ~ACTIVE, 
+  c = ~OLD, 
+  color = I("black"), 
+  type = "scatterternary"
+) %>%
+  layout(
+    annotations = label("Ternary Markers"), 
+    ternary = ternaryAxes
+  )
+```
+
+
+
+## Correlation Matrices
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(corrplot, ggstatsplot, tidyverse)
+```
+
+### Importing Data
+
+```{r}
+wine <- read_csv("data/wine_quality.csv")
+```
+
+### Basic Correlation Matrix
+
+```{r}
+pairs(wine[,1:11])
+```
+
+### Including Plot with Correlation Coefficients
+
+```{r}
+panel.cor <- function(x, y, digits=2, prefix="", cex.cor, ...) {
+usr <- par("usr")
+on.exit(par(usr))
+par(usr = c(0, 1, 0, 1))
+r <- abs(cor(x, y, use="complete.obs"))
+txt <- format(c(r, 0.123456789), digits=digits)[1]
+txt <- paste(prefix, txt, sep="")
+if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+text(0.5, 0.5, txt, cex = cex.cor * (1 + r) / 2)
+}
+
+pairs(wine[,2:12], 
+      upper.panel = panel.cor)
+```
+
+### Plot using ggCorrmat 
+
+```{r}
+grouped_ggcorrmat(
+  data = wine,
+  cor.vars = 1:11,
+  grouping.var = type,
+  type = "robust",
+  p.adjust.method = "holm",
+  plotgrid.args = list(ncol = 2),
+  ggcorrplot.args = list(outline.color = "black", 
+                         hc.order = TRUE,
+                         tl.cex = 10),
+  annotation.args = list(
+    tag_levels = "a",
+    title = "Correlogram for wine dataset",
+    subtitle = "The measures are: alcohol, sulphates, fixed acidity, citric acid, chlorides, residual sugar, density, free sulfur dioxide and volatile acidity",
+    caption = "Dataset: UCI Machine Learning Repository"
+  )
+)
+```
+
+
+### Visualising using Corrplot Package
+
+```{r}
+wine.cor <- cor(wine[, 1:11])
+
+corrplot(wine.cor, 
+         method = "ellipse",     #<< appear as semicircle rather than full circle
+         type="lower",           #<< only show the lower half
+         diag = FALSE,           #<< turn of diagonal cells
+         tl.col = "black")       #<< axis labels to black
+```
+
+### Including numerical data in matrix
+
+```{r}
+corrplot.mixed(wine.cor, 
+               lower = "ellipse",     #<< appear as semicircle rather than full circle
+               upper = "number",      #<< show numbers in upper side
+               tl.pos = "lt",
+               diag = "l",
+               tl.col = "black")
+```
+
+
+### Including test of significance
+
+```{r}
+wine.sig = cor.mtest(wine.cor, conf.level= .95)      #<< compute the p-values and confidence interval
+
+corrplot(wine.cor,
+         method = "number",
+         type = "lower",
+         diag = FALSE,
+         tl.col = "black",
+         tl.srt = 45,
+         p.mat = wine.sig$p,
+         sig.level = .05)
+
+
+```
+
+### Reordering using hierarchical clustering
+
+```{r}
+corrplot(wine.cor, 
+         method = "ellipse", 
+         tl.pos = "lt",
+         tl.col = "black",
+         order="hclust",
+         hclust.method = "ward.D",       #<< clustering method
+         addrect = 3)                    #<< 3 clusters defined
+```
