@@ -1,0 +1,160 @@
+---
+title: "Take-home Exercise 1"
+author: "Cheryl Jeanne Chiew"
+date: "`r Sys.Date()`"
+---
+
+# Introduction
+
+This take-home exercise uses data sourced from [Department of Statistics, Singapore](https://www.singstat.gov.sg/find-data/search-by-theme/population/geographic-distribution/latest-data) which contains data on Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling in June 2022. Through the use of the age-sex pyramid method, this visualisation seeks to reveal insights on the demographic structure of Singapore at the planning area level.
+
+The final analytical visualisation output has been published on [Tableau Public](https://public.tableau.com/app/profile/cheryl.jeanne/viz/Take-homeExercise1-Age-SexPyramid-TrellisDisplay/MatrixDashboard?publish=yes).
+
+```{=html}
+<div class='tableauPlaceholder' id='viz1674280827118' style='position: relative'><noscript><a href='#'><img alt='Matrix Dashboard ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ta&#47;Take-homeExercise1-Age-SexPyramid-TrellisDisplay&#47;MatrixDashboard&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='Take-homeExercise1-Age-SexPyramid-TrellisDisplay&#47;MatrixDashboard' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ta&#47;Take-homeExercise1-Age-SexPyramid-TrellisDisplay&#47;MatrixDashboard&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1674280827118');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+```
+# Findings from Analytical Visualisation
+
+## Populous Estates
+
+The age-sex pyramid is able to visually depict which planning areas are the most populous estates at the total population level. Organising this into a Trellis plot enables further contrasting between the selected planning areas, with the length of the bars depicting Bedok (279k), Sengkang (253k) and Hougang (228k) as estates with the highest population, while Bukit Timah (79k) and Queenstown (97k) are less densely populated.
+
+## Ageing Population vs Younger Population
+
+The age-sex pyramid is also able to derive insights on the age composition within a given planning area. For instance, comparing the range where the bar chart peaks between Punggol and Queenstown, it is evident that residents in Punggol mostly belong to the younger age group, while residents in Queenstown are generally older in age.
+
+![](Images/DP_1.png){fig-align="center"}
+
+## Family with kids vs Families with no kids
+
+The distribution of the bar chart allows us to infer the age range of family nucleuses within the planning areas. For example, the charts displayed below exhibits a bimodal distribution.
+
+The first peak is symmetrical between both genders and can be indicative of the age range of parents. The age range of parents that resides in Punggol and Sengkang are broadly similar (i.e., 30 to 45 years old), while parents in Pasir Ris are older (i.e., 50+ years old).
+
+The sequence of the next peak in the chart is broadly consistent across all 3 charts, wherein the age difference between the 2 peaks is around +/- 30 years - suggestive that the second peak is the children of parents (i.e., less than 10 years old). This pattern allows us to differentiate the mature estates like Pasir Ris, where the age range of parents and their children are older, against the newer estates like Sengkang and Punggol, where parents and their children are younger in age.
+
+![](Images/DP_2.png){fig-align="center"}
+
+In contrast, the distribution of residents in Queenstown does not exhibit an obvious peak, with a somewhat moderate bell-shaped distribution. This implies that in comparison to other estates, residents residing in Queenstown are more likely to have no kids.
+
+![](Images/DP_3.png){fig-align="center"}
+
+## Gender imbalances
+
+The age-sex pyramid allows us to visually contrast and pick out non-symmetrical patterns relating to gender imbalances. This is particularly noticeable in the older age groups. For instance, in the older estates such as Ang Mo Kio, Bedok and Queenstown, there is a greater contrasting effect between females and males. This is consistent with the general understanding that females have a longer lifespan than males.
+
+![](Images/DP_4.png){fig-align="center"}
+
+# Reproducible Procedures - Step-by-Step Description
+
+This section details the steps required to produce the dashboard visualisation.
+
+## Loading of Data
+
+Load the data based on dataset respopagesextod2022.csv downloaded from SingStat in Tableau and rename the dataset to "SG Residents Data (June 2022)" for clarity.
+
+![](Images/section1step1.png){fig-align="center"}
+
+## Setting Up the Bar Chart
+
+1.  Click on the new worksheet tab. From Dimensions, drag AG to the Rows shelf. This will define the Y-axis of the bar chart.
+
+![](Images/section2step1.png){fig-align="center"}
+
+2.  Right click on the AG field under the Rows shelf, click on Edit Aliases and update the Alias values to a more readable format.
+
+![](Images/section2step2.png){fig-align="center"}
+
+3.  Right click on the AG field under the Rows shelf and select Sort descending.
+
+![](section2step3.png){fig-align="center"}
+
+4.  Create a calculated field labelled 'Female Population' that returns the Population value if the gender is female.
+
+![](section2step4.png){fig-align="center"}
+
+5.  From Measures, drag the newly created Female Population calculated field to the Columns shelf to create a bar chart that represents the female population. From the Marks card for Female Population, click on Colour and change the color of the bars to pink.
+
+![](section2step5.png){fig-align="center"}
+
+6.  Create a calculated field labelled 'Male Population' that returns the Population value if the gender is male.
+
+![](section2step6.png){fig-align="center"}
+
+7.  From Measures, drag the newly created Male Population calculated field to the Columns shelf to create a bar chart that represents the male population. From the Marks card for Male Population, click on Colour and change the color of the bars to blue.
+
+![](section2step7.png){fig-align="center"}
+
+8.  Right-click on the X-axis for the Female Population, and select Edit Axis. Under Scale, select Reversed.
+
+![](section2step8.png){fig-align="center"}
+
+## Creating the Trellis Chart Display
+
+1.  9 Planning Areas have been selected for the purpose of this exercise. Create 2 new calculated fields to index the Planning Area by columns and rows. The expected output should be reflected in this order:
+
+| Row / Col \# |       1       |     2      |      3      |
+|:------------:|:-------------:|:----------:|:-----------:|
+|    **1**     |  Ang Mo Kio   |   Bedok    | Bukit Timah |
+|    **2**     | Choa Chu Kang |  Hougang   |  Pasir Ris  |
+|    **3**     |    Punggol    | Queenstown |  Seng Kang  |
+
+![](Images/section3step1.1.png){fig-align="center"} ![](Images/section3step1.2.png){fig-align="center"}
+
+2.  Drag the newly created Columns and Rows calculated fields to the first field of the respective Columns / Rows shelf. This will index the charts as defined in the calculated fields.
+
+![](Images/section3step2.png){fig-align="center"}
+
+3.  Filter out uninterested Planning Area entries by adding the Rows and Columns fields to the Filters shelf. Exclude all null values to filter of Planning Areas which have not previously been defined in the Rows / Columns calculated fields.
+
+![](Images/section3step3.1.png){fig-align="center"} ![](Images/section3step3.2.png){fig-align="center"}
+
+4.  Right click on the Columns values and uncheck Show Header to remove the Column header values. Do the same for the Row header values as well.
+
+![](Images/section3step4.1.png){fig-align="center"}
+
+![](Images/section3step4.2.png){fig-align="center"}
+
+5.  Right click on the AG row header and select Hide Field Labels for Rows to remove the AG field header display.
+
+![](Images/section3step5.png){fig-align="center"}
+
+6.  Drag the PA field into the Label for **Male** Marks card. Click on Label, under Marks to Label, ensure that the parameters as displayed in the screenshot have been set. Manually drag the labels to the top right hand corner of each of the 9 bar charts.
+
+![](Images/section3step6.1.png){fig-align="center"}
+
+![](Images/section3step6.2.png){fig-align="center"}
+
+7.  Drag the Sex field into the Color for **All** Marks card. Click on Colors button and select Edit Colors to select the desired colours. Rename and reformat the Sex field to Gender.
+
+![](Images/section3step7.1.png){fig-align="center"} ![](Images/section3step7.2.png){fig-align="center"}
+
+8.  Create a FIXED level of detail (LOD) calculated field called **Sum Pop** to fix the calculation of sum(Pop) by PA. This will enable the field to fix the total population sum by planning areas for the purpose of the tooltip display.
+
+![](Images/section3step8.png){fig-align="center"}
+
+9.  To set the tooltip display, under the **All population** marks card, drag Sum Pop into Tooltip and set the formatting parameters as displayed in the screenshot below. Under the **Female Population** Marks card, drag PA and Female into Tooltip and set the formatting parameters as displayed in the screenshot below. Do the same for **Male Population** as well.
+
+![](Images/section3step9.png){fig-align="center"}
+
+## Creating the Dashboard
+
+1.  Click on the new dashboard tab. Under size, select Automatic.
+
+![](Images/section4step1.png){fig-align="center"}
+
+2.  Drag the created worksheet to the dashboard space. Using the Text object, ensure that the Tiled format is selected before dragging the object to the top-most layer of the dashboard. Input the dashboard title header and format the text size, font and colour accordingly. ![](Images/section4step2.1.png){fig-align="center"}
+
+![](Images/section4step2.2.png){fig-align="center"}
+
+3.  Drag and drop the image object to the top-right corner of the dashboard. The image should be saved on your desktop before specifying the path to upload the image to. Check Fit image.
+
+![](Images/section4step3.1.png){fig-align="center"} ![](Images/section4step3.2.png){fig-align="center"}
+
+4.  Select the Gender container and drop to the top-right corner of the dashboard.
+
+![](Images/section4step4.png){fig-align="center"}
+
+5.  Resize the respective Containers where relevant to produce the final output.
+
+![](Images/section4step5.png){fig-align="center"}
