@@ -1,0 +1,244 @@
+---
+title: "In Class Exercise 4"
+author: "Cheryl Jeanne Chiew"
+date: "4 February 2023"
+date-modified: "`r Sys.Date()`"
+execute:
+  echo: true
+  eval: true
+  warning: false
+format: html
+editor: visual
+---
+
+## Visualization Using Plotly
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(plotly, DT, tidyverse, patchwork, ggstatsplot, tidyverse) 
+```
+
+### Importing Data
+
+```{r}
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+### Exploring Plotly
+
+```{r}
+plot_ly(data = exam_data,
+        x = ~ENGLISH,
+        y = ~MATHS,
+        color = ~RACE) #<<
+```
+
+### Exploring GGPlotly
+
+```{r}
+p <- ggplot(data=exam_data, 
+            aes(x = MATHS,
+                y = ENGLISH)) +
+  geom_point(dotsize = 1) +
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100))
+ggplotly(p) #<<
+```
+
+### One Sample Test (Histogram)
+
+```{r}
+set.seed(1234)
+
+gghistostats(
+  data = exam_data,
+  x = ENGLISH,
+  type = "bayes",
+  test.value = 60,
+  xlab = "English scores"
+)
+```
+
+### Two Sample Test
+
+```{r}
+ggbetweenstats(
+  data = exam_data,
+  x = GENDER, 
+  y = MATHS,
+  type = "np",
+  messages = FALSE
+)
+```
+
+### One-Way ANOVA Test
+
+```{r}
+ggbetweenstats(
+  data = exam_data,
+  x = RACE, 
+  y = ENGLISH,
+  type = "p",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+```
+
+### Correlation Test - Scatterplot
+
+```{r}
+ggscatterstats(
+  data = exam_data,
+  x = MATHS,
+  y = ENGLISH,
+  marginal = TRUE, #<<
+  )
+```
+
+### Visualizing Models
+
+Installing and Loading R Packages
+
+```{r}
+pacman::p_load(readxl, performance, parameters, see)
+```
+
+Importing Data
+
+```{r}
+car_resale <- read_xls("data/ToyotaCorolla.xls", 
+                       "data") #<< need to specify tab as file has 2 tabs
+car_resale
+```
+
+```{r}
+model <- lm(Price ~ Age_08_04 + Mfg_Year + KM + 
+              Weight + Guarantee_Period, data = car_resale)
+model #<<GTSUMMARY package - to convert output to data frame (tbl_regression)
+```
+
+Check for multicollinearity
+
+```{r}
+check_collinearity(model)
+
+```
+
+Plot multicollinearity
+
+```{r}
+check_c <- check_collinearity(model)
+
+plot(check_c)
+```
+
+Check for normality
+
+```{r}
+model1 <- lm(Price ~ Age_08_04 + KM + 
+              Weight + Guarantee_Period, data = car_resale) #<< Drop attribute with high collinearity
+
+check_n <- check_normality(model1)
+
+check_n
+
+plot(check_n)
+
+```
+
+Check for homogeneity
+
+```{r}
+check_h <- check_heteroscedasticity(model1)
+
+plot(check_h)
+
+```
+
+Check for Everything
+
+```{r}
+check_model(model1)
+```
+
+### Visualising Regression Models
+
+```{r}
+plot(parameters(model1))
+```
+
+```{r}
+ggcoefstats(model1, 
+            output = "plot") 
+```
+
+### Visualizing Uncertainty of Data
+
+Installing and Loading R Packages
+
+```{r}
+pacman::p_load(tidyverse, plotly, crosstalk, DT, ggdist, gganimate)
+```
+
+Importing Data
+
+```{r}
+exam <- read_csv("data/Exam_data.csv")
+```
+
+Formatting Statistical Data (Data Prep)
+
+```{r}
+my_sum <- exam %>%
+  group_by(RACE) %>%
+  summarise(
+    n=n(),
+    mean=mean(MATHS),
+    sd=sd(MATHS)
+    ) %>%
+  mutate(se=sd/sqrt(n-1))
+
+knitr::kable(head(my_sum), format = 'html')
+```
+
+Visualizing using GGPlot
+
+```{r}
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=RACE, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=RACE, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  ggtitle("Standard error of mean 
+          maths score by rac")
+```
+
+Visualizing using GGDist
+
+```{r}
+exam %>%
+  ggplot(aes(x = RACE, 
+             y = MATHS)) +
+  stat_gradientinterval(   
+    fill = "skyblue",      
+    show.legend = TRUE     
+  ) +                        
+  labs(
+    title = "Visualising confidence intervals of mean math score",
+    subtitle = "Gradient + interval plot")
+```
