@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Cheryl Jeanne Chiew">
+<meta name="dcterms.date" content="2023-01-23">
+
+<title>ISSS608-VAA - Take-home Exercise 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS608-VAA</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-on Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html">
+ <span class="dropdown-text">Hands-on Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html">
+ <span class="dropdown-text">Hands-on Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html">
+ <span class="dropdown-text">Hands-on Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html">
+ <span class="dropdown-text">Hands-on Exercise 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03/In-class_Ex03.html">
+ <span class="dropdown-text">In-class Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex04/In-class_Ex04.html">
+ <span class="dropdown-text">In-class Exercise 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take-home Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html">
+ <span class="dropdown-text">Take-home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex02/Take-home_Ex02.html">
+ <span class="dropdown-text">Take-home Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-home_Ex/Take-home_Ex03/Take-home_Ex03.html">
+ <span class="dropdown-text">Take-home Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#peer-critique" id="toc-peer-critique" class="nav-link active" data-scroll-target="#peer-critique">1. Peer Critique</a>
+  <ul class="collapse">
+  <li><a href="#clarity" id="toc-clarity" class="nav-link" data-scroll-target="#clarity">Clarity</a></li>
+  <li><a href="#aesthetics" id="toc-aesthetics" class="nav-link" data-scroll-target="#aesthetics">Aesthetics</a></li>
+  </ul></li>
+  <li><a href="#visualization-remake" id="toc-visualization-remake" class="nav-link" data-scroll-target="#visualization-remake">2. Visualization Remake</a>
+  <ul class="collapse">
+  <li><a href="#proposed-design" id="toc-proposed-design" class="nav-link" data-scroll-target="#proposed-design">2.1. Proposed Design</a></li>
+  <li><a href="#remake-of-original-visualization-using-r" id="toc-remake-of-original-visualization-using-r" class="nav-link" data-scroll-target="#remake-of-original-visualization-using-r">2.2. Remake of Original Visualization using R</a>
+  <ul class="collapse">
+  <li><a href="#installing-and-launching-r-packages" id="toc-installing-and-launching-r-packages" class="nav-link" data-scroll-target="#installing-and-launching-r-packages">Installing and launching R packages</a></li>
+  <li><a href="#importing-the-data" id="toc-importing-the-data" class="nav-link" data-scroll-target="#importing-the-data">Importing the data</a></li>
+  <li><a href="#preparing-the-data" id="toc-preparing-the-data" class="nav-link" data-scroll-target="#preparing-the-data">Preparing the data</a></li>
+  <li><a href="#creating-age-sex-pyramid" id="toc-creating-age-sex-pyramid" class="nav-link" data-scroll-target="#creating-age-sex-pyramid">Creating Age-Sex Pyramid</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Take-home Exercise 2</h1>
+<p class="subtitle lead">Peer critique and visualization remake of take-home exercise 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Cheryl Jeanne Chiew </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 23, 2023</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">February 15, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="peer-critique" class="level1">
+<h1>1. Peer Critique</h1>
+<p>Take-home Exercise 2 is done by selecting a <a href="https://public.tableau.com/app/profile/prachi.ashani/viz/TakeHome_01/DBAge-SexPyramidbyPA">Take-home Exercise 1 submission</a> prepared by a fellow classmate. The peer submission will be critiqued in terms of clarity and aesthetics. I will also remake the original design by proposing an alternative design using the data visualization principles and best practices learnt in Lesson 1 and 2</p>
+
+<div class="tableauPlaceholder" id="viz1674615107725" style="position: relative"><noscript><a href="#"><img alt="DB: Age-Sex Pyramid by PA " src="https://public.tableau.com/static/images/Ta/TakeHome_01/DBAge-SexPyramidbyPA/1_rss.png" style="border: none"></a></noscript><object class="tableauViz" style="display:none;"><param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"> <param name="embed_code_version" value="3"> <param name="site_root" value=""><param name="name" value="TakeHome_01/DBAge-SexPyramidbyPA"><param name="tabs" value="no"><param name="toolbar" value="yes"><param name="static_image" value="https://public.tableau.com/static/images/Ta/TakeHome_01/DBAge-SexPyramidbyPA/1.png"> <param name="animate_transition" value="yes"><param name="display_static_image" value="yes"><param name="display_spinner" value="yes"><param name="display_overlay" value="yes"><param name="display_count" value="yes"><param name="language" value="en-US"></object></div>                <script type="text/javascript">                    var divElement = document.getElementById('viz1674615107725');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='727px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<section id="clarity" class="level3">
+<h3 class="anchored" data-anchor-id="clarity">Clarity</h3>
+<ul>
+<li><p>Grouping the age groups into buckets within a +/- 15 to 20 year range (e.g., young dependents, young work group, prime work group, etc.) results in <strong>loss of important details on the distribution shape</strong>. This also goes against the essence of the age sex pyramid, which is intended to graphically represent the distribution of a population by age and sex.</p></li>
+<li><p>The age-sex pyramid is also intended to be depicted in the form of a pyramid, where the <strong>age group should be sorted in descending order</strong> (i.e., oldest age group on top). Inverting the age group order may not be intuitive for users if they see the apex starting from the bottom.</p></li>
+<li><p>Transforming the values into percentages without displaying the absolute population numbers makes the chart confusing and misleading as users are <strong>not able to compare the population differences between the planning areas</strong>. In the selected chart, population sizes across all planning look visually similar, which is not really the case in numerical terms.</p></li>
+<li><p>The title is labelled as “Proportion of Females and Males by Age Groups for 9 most populous Planning Areas in the Central Area - June 2022”. This may be misleading for users as the definition, scope and methodology of how the 9 Central Areas were selected, or what is defined as a “Central Area” lacks clarity.</p></li>
+</ul>
+</section>
+<section id="aesthetics" class="level3">
+<h3 class="anchored" data-anchor-id="aesthetics">Aesthetics</h3>
+<ul>
+<li><p>The colours chosen for the chart was mildly confusing as it does not show the <strong>separation between Males and Females</strong>.</p></li>
+<li><p>The percentage labels that were included at the end of the bars make the chart appear quite cluttered; additional <strong>supplementary details should be included in the tooltip</strong> instead, as the main focus of the display should be in the distribution.</p></li>
+<li><p>Good display of data source credits.</p></li>
+<li><p>Fonts selected were easy to read, with clear labeling of Planning Areas</p></li>
+</ul>
+</section>
+</section>
+<section id="visualization-remake" class="level1">
+<h1>2. Visualization Remake</h1>
+<section id="proposed-design" class="level2">
+<h2 class="anchored" data-anchor-id="proposed-design">2.1. Proposed Design</h2>
+<p>This proposed design of the visualization remake is intended to retain ideas from the original visualization, whilst incorporating best practices to showcase interesting insights from the population areas.</p>
+<ul>
+<li><p>Dynamic filter has been added to filter for the top 9 most populous planning areas instead.</p></li>
+<li><p>Age Group has been cleaned and original grouping has been retained to preserve the population distribution granularity as much as possible.</p></li>
+<li><p>Labels have been removed to avoid unnecessary clutter.</p></li>
+<li><p>Preserved and enhanced clear labeling of the Planning Area plot labels.</p></li>
+<li><p>Added Colour coding and legends to clearly indicate the distribution segregation between females and males.</p></li>
+<li><p>The population scale axis (x-axis) has been rounded to per thousands instead. The actual population number has also been set up to display as a tooltip on hover instead. This would reduce the numeric clutter in the chart, whilst preserving important information for the user.</p></li>
+<li><p>The data source credit has been retained.</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Proposed-design.jpg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</section>
+<section id="remake-of-original-visualization-using-r" class="level2">
+<h2 class="anchored" data-anchor-id="remake-of-original-visualization-using-r">2.2. Remake of Original Visualization using R</h2>
+<section id="installing-and-launching-r-packages" class="level3">
+<h3 class="anchored" data-anchor-id="installing-and-launching-r-packages">Installing and launching R packages</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, dplyr, ggplot2, ggthemes, ggiraph) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="importing-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="importing-the-data">Importing the data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>respop_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/respopagesextod2022.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="preparing-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="preparing-the-data">Preparing the data</h3>
+<section id="cleaning-of-age-group-values" class="level4">
+<h4 class="anchored" data-anchor-id="cleaning-of-age-group-values">Cleaning of Age Group Values</h4>
+<p><em>Refer to annotations made within the code for specific description</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>respop_data <span class="ot">&lt;-</span> respop_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">AG =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"90_and_over"</span> <span class="sc">~</span> <span class="st">"90 and over"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"85_to_89"</span> <span class="sc">~</span> <span class="st">"85 - 89"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"80_to_84"</span> <span class="sc">~</span> <span class="st">"80 - 84"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"75_to_79"</span> <span class="sc">~</span> <span class="st">"75 - 79"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"70_to_74"</span> <span class="sc">~</span> <span class="st">"70 - 74"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"65_to_69"</span> <span class="sc">~</span> <span class="st">"65 - 69"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"60_to_64"</span> <span class="sc">~</span> <span class="st">"60 - 64"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"55_to_59"</span> <span class="sc">~</span> <span class="st">"55 - 59"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"50_to_54"</span> <span class="sc">~</span> <span class="st">"50 - 54"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"45_to_49"</span> <span class="sc">~</span> <span class="st">"45 - 49"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"40_to_44"</span> <span class="sc">~</span> <span class="st">"40 - 44"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"35_to_39"</span> <span class="sc">~</span> <span class="st">"35 - 39"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"30_to_34"</span> <span class="sc">~</span> <span class="st">"30 - 34"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"25_to_29"</span> <span class="sc">~</span> <span class="st">"25 - 29"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"20_to_24"</span> <span class="sc">~</span> <span class="st">"20 - 24"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"15_to_19"</span> <span class="sc">~</span> <span class="st">"15 - 19"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"10_to_14"</span> <span class="sc">~</span> <span class="st">"10 - 14"</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#&lt;&lt; Labelling single digits to start with '0' preserves the sorting integrity without requiring a separate code to specifically sort the age groups</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"5_to_9"</span> <span class="sc">~</span> <span class="st">"05 - 09"</span>,   </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    AG <span class="sc">%in%</span> <span class="st">"0_to_4"</span> <span class="sc">~</span> <span class="st">"00 - 04"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="deriving-top-9-planning-areas-by-population" class="level4">
+<h4 class="anchored" data-anchor-id="deriving-top-9-planning-areas-by-population">Deriving Top 9 Planning Areas by Population</h4>
+<p><em>Refer to annotations made within the code for specific description</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&lt;&lt; Derive Top 9 highest Pop by PA</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>top9pa <span class="ot">&lt;-</span> respop_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PA, Pop) <span class="sc">%&gt;%</span>               <span class="co">#&lt;&lt; Select PA and Pop columns</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA)  <span class="sc">%&gt;%</span>                 <span class="co">#&lt;&lt; Group by PA, sum Pop into sum_Pop column</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum_Pop=</span><span class="fu">sum</span>(Pop),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(sum_Pop)) <span class="sc">%&gt;%</span>        <span class="co">#&lt;&lt; Sort PA by sum_Pop in descending order</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">9</span>)                        <span class="co">#&lt;&lt; Only retain top 9 PA</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&lt;&lt; Inner join back to main dataset to get full data only for the Top 9 PA</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>respop_filtered <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(respop_data, </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                              top9pa,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                              <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"PA"</span> <span class="ot">=</span> <span class="st">"PA"</span>))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&lt;&lt; Aggregate Top 9 Population by PA, AG, Sex</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> respop_filtered <span class="sc">%&gt;%</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PA, AG, Sex, Pop) <span class="sc">%&gt;%</span>              </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PA, AG, Sex)  <span class="sc">%&gt;%</span>                </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">sum_Pop=</span><span class="fu">sum</span>(Pop),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">'drop'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="creating-age-sex-pyramid" class="level3">
+<h3 class="anchored" data-anchor-id="creating-age-sex-pyramid">Creating Age-Sex Pyramid</h3>
+<p><em>Refer to annotations made within the code for specific description</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> dd, <span class="fu">aes</span>(<span class="at">x =</span> AG, <span class="at">fill =</span> Sex)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; First Bar Interactive Chart to filter for data where Sex = Males, display y-axis by population in thousands, display Population # in tooltip</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_col_interactive</span>(<span class="at">data =</span> <span class="fu">subset</span>(dd, Sex <span class="sc">==</span> <span class="st">"Males"</span>), <span class="fu">aes</span>(<span class="at">y =</span> sum_Pop<span class="sc">/</span><span class="dv">1000</span>, <span class="at">tooltip =</span> sum_Pop)) <span class="sc">+</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Second Bar Chart to filter for data where Sex = Females, display y-axis by population in thousands. *-1 inverts the axis, display Population # in tooltip</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_col_interactive</span>(<span class="at">data =</span> <span class="fu">subset</span>(dd, Sex <span class="sc">==</span> <span class="st">"Females"</span>), <span class="fu">aes</span>(<span class="at">y=</span>sum_Pop<span class="sc">/</span><span class="dv">1000</span> <span class="sc">*</span> (<span class="sc">-</span><span class="dv">1</span>), <span class="at">tooltip =</span> sum_Pop) ) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Flip the coordinates so that AG is at the Y-axis</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_flip</span>() <span class="sc">+</span>  </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Split chart by PA, with 3 rows - there are 9 PAs, so this will appear as a 3x3</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">facet_wrap</span>(<span class="sc">~</span> PA, , <span class="at">nrow=</span><span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Convert initial y-axis labels (i.e., Pop) into absolute terms to remove the '-' sign</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> abs) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Apply economist theme - white background for simplicity, horizontal gridlines only for easy trace-ability to AG axis marks</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_economist_white</span>(<span class="at">gray_bg=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">scale_color_economist</span>() <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Formatting of axis fonts, axis ticks, axis lines</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; Further expanding line margins to reduce clutter of title / subtitle positioning</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"gray60"</span>, <span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.ticks.x =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"gray60"</span>),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.line.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>, <span class="at">face =</span> <span class="st">"bold"</span>,<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>), <span class="at">colour =</span> <span class="st">"gray60"</span>),</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">r =</span> <span class="dv">10</span>), <span class="at">colour =</span> <span class="st">"gray60"</span>),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">margin=</span><span class="fu">margin</span>(<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">0</span>))</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      <span class="co">#&lt;&lt; add Header title, Axis titles, sub titles</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">ggtitle</span>(<span class="st">"Distribution of Sex by Age Group for 9 most populous areas - June 2022"</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Population (per'000) "</span>, <span class="at">x =</span> <span class="st">"Age Group"</span>, <span class="at">size =</span> <span class="dv">15</span>) <span class="sc">+</span> </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Data Source: Department of Statistics, Singapore"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&lt;&lt; run interactive ggirafe</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="fu">girafe</span>(</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">ggobj =</span> p,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">width_svg =</span> <span class="dv">10</span>,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_svg =</span> <span class="dv">10</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="diagram.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
