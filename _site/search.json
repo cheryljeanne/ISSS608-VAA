@@ -208,5 +208,12 @@
     "title": "Take Home Exercise 04",
     "section": "",
     "text": "1. Introduction\nIn this take-home exercise, you are required to uncover the impact of COVID-19 as well as the global economic and political dynamic in 2022 on Singapore bi-lateral trade (i.e. Import, Export and Trade Balance) by using appropriate analytical visualisation techniques learned in Lesson 6: It’s About Time. Students are encouraged to apply appropriate interactive techniques to enhance user and data discovery experiences.\nThe dataset selected for this exercise is sourced from Singstat.gov.sg and contains data on the Merchandise Imports and Exports by Region / Market.\nFor the purpose of this exercise, the study period will be conducted from January 2020 to December 2022.\n\n\n2. Data Visualization\n\nInstalling and Loading R Packages\n\npacman::p_load(readxl, dplyr, tidyverse) \n\n\n\nImporting Data\n\nimport_data <- read_xlsx(\"data/outputFile.xlsx\",\n                         sheet = \"T1\",                    #<< select sheet T2\n                         range = \"A10:UT129\",             #<< only read specified cell range \n                         na = \"na\")                       #<< treat na as missing values\n\nexport_data <- read_xlsx(\"data/outputFile.xlsx\",\n                         sheet = \"T2\",                    #<< select sheet T2\n                         range = \"A10:UT101\",             #<< only read specified cell range\n                         na = \"na\")                       #<< treat na as missing values\n\n\n\nData Preparation"
+  },
+  {
+    "objectID": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "href": "Hands-on_Ex/Hands-on_Ex06/Hands-on_Ex06.html",
+    "title": "Hands On Exercise 06",
+    "section": "",
+    "text": "pacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, tidyverse, readxl, knitr, data.table)"
   }
 ]
