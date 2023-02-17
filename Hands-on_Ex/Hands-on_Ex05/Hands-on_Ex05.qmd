@@ -343,3 +343,44 @@ ggparcoord(data = wh,
            boxplot = TRUE, 
            title = "Parallel Coordinates Plot of World Happines Variables")
 ```
+
+### Parallel Coordinates with Facet (+ Rotating x-axis label)
+
+```{r}
+ggparcoord(data = wh, 
+           columns = c(7:12), 
+           groupColumn = 2,
+           scale = "uniminmax",
+           alphaLines = 0.2,
+           boxplot = TRUE, 
+           title = "Multiple Parallel Coordinates Plots of World Happines Variables by Region") +
+  facet_wrap(~ Region) +                             #<< facet wrap by Region
+  theme(axis.text.x = element_text(angle = 30, hjust=1))      #<< Rotating x-axis label + adjust alignment
+```
+
+
+#### Plotting Interactive Parallel Coordinates Plot
+
+```{r}
+wh <- wh %>%
+  select("Happiness score", c(7:12))
+parallelPlot(wh,
+             width = 320,
+             height = 250)
+```
+
+Rotating Title to avoid overlapping axist labels
+
+```{r}
+parallelPlot(wh,
+             rotateTitle = TRUE)
+```
+
+Plot Histogram overlay
+
+```{r}
+histoVisibility <- rep(TRUE, ncol(wh))
+parallelPlot(wh,
+             rotateTitle = TRUE,
+             histoVisibility = histoVisibility)
+```
