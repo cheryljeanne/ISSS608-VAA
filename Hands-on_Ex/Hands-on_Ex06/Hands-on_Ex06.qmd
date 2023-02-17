@@ -1,0 +1,12 @@
+---
+title: "Hands On Exercise 06"
+author: "Cheryl Jeanne Chiew"
+date: "12 February 2023"
+date-modified: "`r Sys.Date()`"
+execute:
+  echo: true
+  eval: true
+  warning: false
+format: html
+editor: visual
+---
