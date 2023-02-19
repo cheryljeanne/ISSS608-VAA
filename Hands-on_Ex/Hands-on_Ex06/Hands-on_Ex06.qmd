@@ -18,3 +18,259 @@ editor: visual
 ```{r}
 pacman::p_load(scales, viridis, lubridate, ggthemes, gridExtra, tidyverse, readxl, knitr, data.table)
 ```
+
+#### Importing Data
+
+```{r}
+#| warning: false
+attacks <- read_csv("data/eventlog.csv")
+
+kable(head(attacks)) #<< to review the structure of the imported data frame
+```
+
+#### Data Preparation
+
+```{r}
+#| warning: false
+
+#<< writing a function to create weekday and hour fields for calendar heatmap
+make_hr_wkday <- function(ts, sc, tz) {
+  real_times <- ymd_hms(ts, 
+                        tz = tz[1], 
+                        quiet = TRUE)
+  dt <- data.table(source_country = sc,
+                   wkday = weekdays(real_times),
+                   hour = hour(real_times))
+  return(dt)
+}
+
+#<< create day of the week values
+wkday_levels <- c('Saturday', 'Friday', 
+                  'Thursday', 'Wednesday', 
+                  'Tuesday', 'Monday', 
+                  'Sunday')
+
+#<< pass in data frame values into the make_hr_wkday function
+attacks <- attacks %>%
+  group_by(tz) %>%
+  do(make_hr_wkday(.$timestamp, 
+                   .$source_country, 
+                   .$tz)) %>% 
+  ungroup() %>%            
+  mutate(wkday = factor(            #<< convert wkday and hour fields into a factor so that values will be ordered when plotting
+    wkday, levels = wkday_levels),
+    hour  = factor(
+      hour, levels = 0:23))
+```
+
+#### Building the Calendar Heatmap
+
+```{r}
+#| warning: false
+grouped <- attacks %>%                            #<<derive count of attacks
+  count(wkday, hour) %>% 
+  ungroup() %>%
+  na.omit()
+
+ggplot(grouped,                                   #<< x=hour, y=weekday, fill gradient by counts
+       aes(hour, 
+           wkday, 
+           fill = n)) + 
+geom_tile(color = "white", 
+          size = 0.1) + 
+theme_tufte(base_family = "Helvetica") + 
+coord_equal() +                                    #<<make the grids into squares (equal sides)
+scale_fill_gradient(name = "# of attacks",         #<< customizing fill gradient (higher = darker)
+                    low = "sky blue", 
+                    high = "dark blue") +
+labs(x = NULL, 
+     y = NULL, 
+     title = "Attacks by weekday and time of day") +
+theme(axis.ticks = element_blank(),
+      plot.title = element_text(hjust = 0.5),
+      legend.title = element_text(size = 8),
+      legend.text = element_text(size = 6) )
+```
+
+#### Data Prep for Top 4 Countries with Highest Attacks
+
+```{r}
+#| warning: false
+#<< Defining countries and % of total attacks
+attacks_by_country <- count(
+  attacks, source_country) %>%
+  mutate(percent = percent(n/sum(n))) %>%
+  arrange(desc(n))
+
+#<< Derive top 4 countries
+top4 <- attacks_by_country$source_country[1:4]
+
+#<< Filter for Top 4 countries in main data set
+top4_attacks <- attacks %>%
+  filter(source_country %in% top4) %>%
+  count(source_country, wkday, hour) %>%        #<< derive count of attacks
+  ungroup() %>%
+  mutate(source_country = factor(               #<< Convert source country into a factor so that values will be ordered
+    source_country, levels = top4)) %>%
+  na.omit()
+
+```
+
+
+#### Plotting calendar Heatmap for Top 4 Countries
+
+```{r}
+#| warning: false
+ggplot(top4_attacks, 
+       aes(hour, 
+           wkday, 
+           fill = n)) + 
+  geom_tile(color = "white", 
+          size = 0.1) + 
+  theme_tufte(base_family = "Helvetica") + 
+  coord_equal() +
+  scale_fill_gradient(name = "# of attacks",
+                    low = "sky blue", 
+                    high = "dark blue") +
+  facet_wrap(~source_country, ncol = 2) +
+  labs(x = NULL, y = NULL, 
+     title = "Attacks on top 4 countries by weekday and time of day") +
+  theme(axis.ticks = element_blank(),
+        axis.text.x = element_text(size = 7),
+        plot.title = element_text(hjust = 0.5),
+        legend.title = element_text(size = 8),
+        legend.text = element_text(size = 6) )
+```
+
+
+## Plotting Cycle Plot
+
+#### Importing Data
+
+```{r}
+#| warning: false
+air <- read_excel("data/arrivals_by_air.xlsx")
+```
+
+#### Data Preparation
+
+```{r}
+#| warning: false
+
+#<< create 2 new fields - MONTH / YEAR
+air$month <- factor(month(air$`Month-Year`), 
+                    levels=1:12, 
+                    labels=month.abb, 
+                    ordered=TRUE) 
+air$year <- year(ymd(air$`Month-Year`))
+
+
+#<< extract the target country
+Vietnam <- air %>% 
+  select(`Vietnam`, 
+         month, 
+         year) %>%
+  filter(year >= 2010)
+
+#<< derive average arrivals by month
+hline.data <- Vietnam %>% 
+  group_by(month) %>%
+  summarise(avgvalue = mean(`Vietnam`))
+
+```
+
+#### Plotting the Cycle Plot
+
+```{r}
+#| warning: false
+
+ggplot() + 
+  geom_line(data=Vietnam,                       #<<plot line chart from vietname dataset, grouped by month
+            aes(x=year, 
+                y=`Vietnam`, 
+                group=month), 
+            colour="black") +
+  geom_hline(aes(yintercept=avgvalue),          #<<add average reference line from hline.data
+             data=hline.data, 
+             linetype=6, 
+             colour="red", 
+             size=0.5) + 
+  facet_grid(~month) +
+  labs(axis.text.x = element_blank(),
+       title = "Visitor arrivals from Vietnam by air, Jan 2010-Dec 2019") +
+  xlab("") +
+  ylab("No. of Visitors")
+```
+
+
+## Plotting Slopegraph
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(CGPfunctions)
+```
+
+#### Importing Data
+
+```{r}
+#| warning: false
+rice <- read_csv("data/rice.csv")
+```
+
+#### Plotting the Slopegraph
+
+```{r}
+#| warning: false
+rice %>% 
+  mutate(Year = factor(Year)) %>%                                 #<<convert YEAR from numeric into factor
+  filter(Year %in% c(1961, 1980)) %>%                             #<< filter only for START / END dates
+  newggslopegraph(Year, Yield, Country,                         
+                Title = "Rice Yield of Top 11 Asian Counties",
+                SubTitle = "1961-1980",
+                Caption = "Prepared by: Dr. Kam Tin Seong")
+```
+
+
+## Plotting Horizon Plot
+
+#### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(ggHoriPlot)
+```
+
+#### Data Import
+
+```{r}
+#| warning: false
+
+averp <- read_csv("data/AVERP.csv") %>% 
+  mutate(`Date` = dmy(`Date`))           #<< by default, read_csv imports Date field as Character data type. need to parse the date field into appropriate data type
+```
+
+#### Plotting the Horizon Graph
+
+```{r}
+averp %>% 
+  filter(Date >= "2018-01-01") %>%                          #<< filter for intended date range
+  ggplot() +
+  geom_horizon(aes(x = Date, y=Values), 
+               origin = "midpoint", 
+               horizonscale = 6) +                          #<< defining cut points of the horizon plot
+  facet_grid(`Consumer Items`~.) +                          #<< group by consumer items category
+    theme_few() +
+  scale_fill_hcl(palette = 'RdBu') +
+  theme(panel.spacing.y=unit(0, "lines"), strip.text.y = element_text(
+    size = 5, angle = 0, hjust = 0),
+    legend.position = 'none',
+    axis.text.y = element_blank(),
+    axis.text.x = element_text(size=7),
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.border = element_blank()
+    ) +
+    scale_x_date(expand=c(0,0), date_breaks = "3 month", date_labels = "%b%y") + #<< tick marks to display in 3M intervals
+  ggtitle('Average Retail Prices of Selected Consumer Items (Jan 2018 to Dec 2022)')
+```

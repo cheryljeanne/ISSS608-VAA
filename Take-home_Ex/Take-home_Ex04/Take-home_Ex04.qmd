@@ -47,6 +47,16 @@ export_data <- read_xlsx("data/outputFile.xlsx",
 
 ```{r}
 #| warning: false
+import_data
 
+##remove columns to only retain January 2020 to December 2022
+##remove total and region rows
+##Pivot table to put dates as row names
+##transform row names to MM-YYYY
+##Retain all countries, pick out nuances
+
+##consider using horizon graph? for countries
+##cycle plot
+##slope graphs
 
 ```

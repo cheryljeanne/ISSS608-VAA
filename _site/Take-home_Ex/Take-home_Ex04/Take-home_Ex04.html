@@ -272,7 +272,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">February 17, 2023</p>
+      <p class="date-modified">February 18, 2023</p>
     </div>
   </div>
     
@@ -312,7 +312,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="data-preparation" class="level4">
 <h4 class="anchored" data-anchor-id="data-preparation">Data Preparation</h4>
 <div class="cell">
-
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>import_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 119 × 566
+   `Data Series` 2023 …¹ 2022 …² 2022 …³ 2022 …⁴ 2022 …⁵ 2022 …⁶ 2022 …⁷ 2022 …⁸
+   &lt;chr&gt;           &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1 Total Mercha…  4.44e7  4.99e7  5.07e7  5.32e7  5.58e7  5.85e7  6.10e7  5.96e7
+ 2 America (Mil…  6.27e3  6.90e3  7.53e3  7.67e3  8.00e3  8.63e3  7.88e3  8.02e3
+ 3 Asia (Millio…  3.02e4  3.36e4  3.47e4  3.61e4  3.77e4  4.09e4  4.32e4  4.25e4
+ 4 Europe (Mill…  6.43e3  7.54e3  7.24e3  7.48e3  8.17e3  7.43e3  8.30e3  7.30e3
+ 5 Oceania (Mil…  9.83e2  1.40e3  6.64e2  1.33e3  1.54e3  9.36e2  1.06e3  1.14e3
+ 6 Africa (Mill…  5.41e2  4.15e2  4.84e2  5.90e2  3.95e2  5.51e2  5.74e2  6.76e2
+ 7 European Uni…  4.58e3  5.06e3  4.96e3  4.69e3  5.15e3  5.13e3  5.23e3  5.14e3
+ 8 Belgium (Tho…  9.41e4  1.04e5  1.22e5  8.88e4  2.16e5  1.33e5  2.25e5  1.15e5
+ 9 Denmark (Tho…  5.75e4  6.77e4  6.74e4  6.37e4  6.18e4  1.26e5  5.58e4  5.10e4
+10 France (Thou…  1.61e6  1.54e6  1.56e6  1.49e6  1.66e6  1.62e6  1.56e6  1.54e6
+# … with 109 more rows, 557 more variables: `2022 May` &lt;dbl&gt;, `2022 Apr` &lt;dbl&gt;,
+#   `2022 Mar` &lt;dbl&gt;, `2022 Feb` &lt;dbl&gt;, `2022 Jan` &lt;dbl&gt;, `2021 Dec` &lt;dbl&gt;,
+#   `2021 Nov` &lt;dbl&gt;, `2021 Oct` &lt;dbl&gt;, `2021 Sep` &lt;dbl&gt;, `2021 Aug` &lt;dbl&gt;,
+#   `2021 Jul` &lt;dbl&gt;, `2021 Jun` &lt;dbl&gt;, `2021 May` &lt;dbl&gt;, `2021 Apr` &lt;dbl&gt;,
+#   `2021 Mar` &lt;dbl&gt;, `2021 Feb` &lt;dbl&gt;, `2021 Jan` &lt;dbl&gt;, `2020 Dec` &lt;dbl&gt;,
+#   `2020 Nov` &lt;dbl&gt;, `2020 Oct` &lt;dbl&gt;, `2020 Sep` &lt;dbl&gt;, `2020 Aug` &lt;dbl&gt;,
+#   `2020 Jul` &lt;dbl&gt;, `2020 Jun` &lt;dbl&gt;, `2020 May` &lt;dbl&gt;, `2020 Apr` &lt;dbl&gt;, …</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">##remove columns to only retain January 2020 to December 2022</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">##remove total and region rows</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">##Pivot table to put dates as row names</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">##transform row names to MM-YYYY</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##Retain all countries, pick out nuances</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">##consider using horizon graph? for countries</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">##cycle plot</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">##slope graphs</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
