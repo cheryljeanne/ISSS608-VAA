@@ -13,7 +13,7 @@ editor: visual
 
 # 1. Introduction
 
-In this take-home exercise, you are required to uncover the impact of COVID-19 as well as the global economic and political dynamic in 2022 on Singapore bi-lateral trade (i.e. Import, Export and Trade Balance) by using appropriate analytical visualisation techniques learned in Lesson 6: It’s About Time. Students are encouraged to apply appropriate interactive techniques to enhance user and data discovery experiences.
+This Take-Home Exercise seeks to uncover the impact of COVID-19 as well as the global economic and political dynamic in 2022 on Singapore's bi-lateral trade (i.e. Import, Export and Trade Balance) by using appropriate analytical visualisation techniques learned in Lesson 6: It’s About Time. 
 
 The dataset selected for this exercise is sourced from [Singstat.gov.sg](https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data) and contains data on the *Merchandise Imports and Exports by Region / Market*.
 
@@ -25,7 +25,7 @@ For the purpose of this exercise, the study period will be conducted from Januar
 #### Installing and Loading R Packages
 
 ```{r}
-pacman::p_load(readxl, dplyr, tidyverse) 
+pacman::p_load(readxl, dplyr, tidyverse, lubridate, knitr) 
 ```
 
 #### Importing Data
@@ -43,20 +43,89 @@ export_data <- read_xlsx("data/outputFile.xlsx",
                          na = "na")                       #<< treat na as missing values
 ```
 
-#### Data Preparation
+#### Data Preparation / Data Output
 
+::: {.panel-tabset}
+
+## Import Dataset
 ```{r}
 #| warning: false
-import_data
 
-##remove columns to only retain January 2020 to December 2022
-##remove total and region rows
-##Pivot table to put dates as row names
-##transform row names to MM-YYYY
+#<< remove spaces in column names
+colnames(import_data) <- gsub(" ", "", colnames(import_data), fixed = TRUE)
+
+import <- import_data %>%
+  pivot_longer(                                                       #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = `2023Jan`:`1976Jan`, 
+     names_to = "date",
+     values_transform = as.numeric,
+     values_to = "value") %>%
+  pivot_wider(                                                        #<< pivot wider to convert dataseries column to columns
+    names_from = DataSeries,
+    values_from = value
+  ) %>%
+  mutate(date = ym(date)) %>%                                         #<< convert values to date
+  mutate_at(vars(contains('Thousand Dollars')), ~ (. *1000)) %>%      #<< if column contains THOUSAND, multiply values by 1000
+  mutate_at(vars(contains('Million Dollars')), ~ (. *1000000)) %>%    #<< if column contains THOUSAND, multiply values by 1000000
+  filter(between(date, as.Date('2020-01-01'), as.Date('2022-12-01'))) #<< filter for date range Jan20 - Dec22
+
+#<< remove thousand dollar string from column name
+colnames(import) <- gsub(" (Thousand Dollars)", "", colnames(import), fixed = TRUE)
+
+#<< remove million dollar string from column name            
+colnames(import) <- gsub(" (Million Dollars)", "", colnames(import), fixed = TRUE)  
+
+#<< remove symbols from column names
+colnames(import) <- str_replace_all(colnames(import), "[^[:alnum:]]", "")
+
+kable(head(import))
+
+```
+
+## Export Dataset
+```{r}
+#| warning: false
+
+#<< remove spaces in column names
+colnames(export_data) <- gsub(" ", "", colnames(export_data), fixed = TRUE)
+
+export <- export_data %>%
+  pivot_longer(                                                       #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = `2023Jan`:`1976Jan`, 
+     names_to = "date",
+     values_transform = as.numeric,
+     values_to = "value") %>%
+  pivot_wider(                                                        #<< pivot wider to convert dataseries column to columns
+    names_from = DataSeries,
+    values_from = value
+  ) %>%
+  mutate(date = ym(date)) %>%                                         #<< convert values to date
+  mutate_at(vars(contains('Thousand Dollars')), ~ (. *1000)) %>%      #<< if column contains THOUSAND, multiply values by 1000
+  mutate_at(vars(contains('Million Dollars')), ~ (. *1000000)) %>%    #<< if column contains THOUSAND, multiply values by 1000000
+  filter(between(date, as.Date('2020-01-01'), as.Date('2022-12-01'))) #<< filter for date range Jan20 - Dec22
+
+#<< remove thousand dollar string from column name
+colnames(export) <- gsub(" (Thousand Dollars)", "", colnames(export), fixed = TRUE)
+
+#<< remove million dollar string from column name            
+colnames(export) <- gsub(" (Million Dollars)", "", colnames(export), fixed = TRUE)  
+
+#<< remove symbols from column names
+colnames(export) <- str_replace_all(colnames(export), "[^[:alnum:]]", "")
+
+kable(head(export))
+
+```
+
+:::
+
+
+#### Plotting the Data
+
+
+
 ##Retain all countries, pick out nuances
 
 ##consider using horizon graph? for countries
 ##cycle plot
 ##slope graphs
-
-```
