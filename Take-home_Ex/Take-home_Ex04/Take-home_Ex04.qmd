@@ -25,7 +25,7 @@ For the purpose of this exercise, the study period will be conducted from Januar
 #### Installing and Loading R Packages
 
 ```{r}
-pacman::p_load(readxl, dplyr, tidyverse, lubridate, knitr) 
+pacman::p_load(readxl, dplyr, tidyverse, lubridate, knitr, patchwork, CGPfunctions, gganimate, gapminder, treemapify, ggiraph) 
 ```
 
 #### Importing Data
@@ -60,6 +60,7 @@ import <- import_data %>%
      names_to = "date",
      values_transform = as.numeric,
      values_to = "value") %>%
+  replace(is.na(.), 0) %>%                                            #<< replace all NA values with zero
   pivot_wider(                                                        #<< pivot wider to convert dataseries column to columns
     names_from = DataSeries,
     values_from = value
@@ -95,6 +96,7 @@ export <- export_data %>%
      names_to = "date",
      values_transform = as.numeric,
      values_to = "value") %>%
+  replace(is.na(.), 0) %>%                                            #<< replace all NA values with zero
   pivot_wider(                                                        #<< pivot wider to convert dataseries column to columns
     names_from = DataSeries,
     values_from = value
@@ -123,9 +125,255 @@ kable(head(export))
 #### Plotting the Data
 
 
+## TREEMAP ANIMATION BY COUNTRIES
+
+#### Selection & Design Consideration
+
+
+#### Reproducible Procedures
+
+The code chunk below contains the codes required to reproduce this visualization, along with the corresponding annotations which describes the procedures used.
+
+```{r}
+#| warning: false
+#| output: false
+
+country_import_long <- import %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "import_value") %>%
+  mutate(val_mil = round(import_value/1000000,1)) %>%                       #<< rounding values to millions for easy viewability
+  unite("labels", country,val_mil, sep = "\n", remove = FALSE)              #<< create treemap labels
+
+p1 <- country_import_long %>%
+  filter(import_value > 0) %>%                                              #<< remove country lines where import value = 0
+  ggplot(aes(area = import_value, fill = import_value, label = labels)) +   #<< ggplot function - set area / fill / labels
+  theme(legend.position = "none",                                     
+        plot.title = element_text(size = 25, face = "bold"),
+        plot.caption = element_text(size = 15)) +
+  geom_treemap() +                                                          #<< plot treemap - default squarify layout
+  geom_treemap_text(place = "centre", grow = TRUE, colour = "white") +      #<< label text to grow and fill square size
+  transition_time(date) +                                                   #<< transition based on time attribute
+  ease_aes('linear') +                                                      #<< linear progression
+  labs(title = "SG Bilateral Trade Imports - Period: {frame_time}",         #<< setting of Plot Title and Caption
+       caption = "The area of each tile represents the value of SG's imports (in millions) by Country")
+
+#<< save animation as gif file, set number of frames and plot size
+anim_save("animated_treemap_import.gif", p1, nframes = 216, width = 600, height = 600)
+
+country_export_long <- export %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "export_value") %>%
+  mutate(val_mil = round(export_value/1000000,1)) %>%                       #<< rounding values to millions for easy viewability
+  unite("labels", country,val_mil, sep = "\n", remove = FALSE)              #<< create treemap labels
+
+p2 <- country_export_long %>%
+  filter(export_value > 0) %>%                                              #<< remove country lines where import value = 0
+  ggplot(aes(area = export_value, fill = export_value, label = labels)) +   #<< ggplot function - set area / fill / labels
+  theme(legend.position = "none", 
+        plot.title = element_text(size = 25, face = "bold"),
+        plot.caption = element_text(size = 15)) +
+  geom_treemap() +                                                          #<< plot treemap - default squarify layout
+  geom_treemap_text(place = "centre", grow = TRUE, colour = "white") +      #<< label text to grow and fill square size
+  transition_time(date) +                                                   #<< transition based on time attribute
+  ease_aes('linear') +                                                      #<< linear progression
+  labs(title = "SG Bilateral Trade Exports - Period: {frame_time}",         #<< setting of Plot Title and Caption
+       caption = "The area of each tile represents the value of SG's imports (in millions) by Country")
+
+#<< save animation as gif file, set number of frames and plot size
+anim_save("animated_treemap_export.gif", p2, nframes = 216, width = 600, height = 600)
+
+```
+
+#### Patterns Revealed by Visualisation
+
+
+
+## TOP 6 TRADING PARTNERS STACKED BAR CHART
+
+#### Selection & Design Consideration
+
+
+#### Reproducible Procedures
+
+The code chunk below contains the codes required to reproduce this visualization, along with the corresponding annotations which describes the procedures used.
+
+```{r}
+#| warning: false
+#| fig-height: 10
+#| fig-width: 12
+
+country_import_long_1 <- import %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "import")
+
+country_export_long_1 <- export %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "export")
+
+country_long_1 <- inner_join(country_export_long_1, country_import_long_1) %>%
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = c('export', 'import'), 
+     names_to = "Merc_Trade",
+     values_transform = as.numeric,
+     values_to = "TradeValue") %>%
+  mutate(TradeValue_bil = round(TradeValue/1000000000,1))
+
+#<< Derive Top 9 highest Pop by PA
+top9countries <- country_long_1 %>%
+  select(country, TradeValue) %>%               #<< Select PA and Pop columns
+  group_by(country)  %>%                 #<< Group by PA, sum Pop into sum_Pop column
+  summarise(sum_TV=sum(TradeValue),
+            .groups = 'drop') %>%
+  arrange(desc(sum_TV)) %>%        #<< Sort PA by sum_Pop in descending order
+  slice(0:5)
+
+#<< Inner join back to main dataset to get full data only for the Top 9 PA
+country_long_1_top5 <- inner_join(country_long_1, 
+                              top9countries) %>%
+  mutate(year = year(date)) %>%
+  select(year, country, Merc_Trade, TradeValue, TradeValue_bil) %>%               #<< Select PA and Pop columns
+  group_by(year, country, Merc_Trade)  %>%                 #<< Group by PA, sum Pop into sum_Pop column
+  summarise(sum_TV=sum(TradeValue),
+            sum_TV_bil=sum(TradeValue_bil),
+            .groups = 'drop')
+  
+
+country_long_1_top5$tooltip <- c(paste0(     #<<
+  "Country = ", country_long_1_top5$country,         #<<
+  "\n Trade Type = ", country_long_1_top5$Merc_Trade,
+  "\n Trade Value (bn) = $", country_long_1_top5$TradeValue_bil)) #<<
+
+p <- ggplot(country_long_1_top5, aes(fill=Merc_Trade, y=sum_TV/1000000000, x = country, label = sum_TV_bil)) +
+  geom_bar_interactive(aes(tooltip = tooltip), position="stack", stat="identity") +
+  geom_text(position = position_stack(vjust = 0.5), size = 2, color = "#ffffff") +
+  facet_wrap(~ year, ncol=3)
+
+girafe(                                  #<<
+  ggobj = p,                             #<<
+  width_svg = 6,                         #<<
+  height_svg = 6*0.618                   #<<   
+)                                        #<<
+```
+
+#### Patterns Revealed by Visualisation
+
+
+
+
+## TOP 6 TRADING PARTNERS CYCLE PLOT
+
+#### Selection & Design Consideration
+
+
+#### Reproducible Procedures
+
+The code chunk below contains the codes required to reproduce this visualization, along with the corresponding annotations which describes the procedures used.
+
+```{r}
+#| warning: false
+
+```
+
+#### Patterns Revealed by Visualisation
+
+
+
+
+
+
+
+
+
+
+```{r}
+#| fig-height: 12
+#| fig-width: 10
+#| output: false
+
+country_import_long <- import %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                       #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "value")
+
+p1 <- country_import_long %>% 
+  filter(date == "2022-12-01" | date == "2020-01-01") %>% 
+  mutate(date = year(date),
+         date = factor(date), 
+         value = value / 1000000000,
+         value = round(value,3)) %>%
+  newggslopegraph(date, value, country,
+                Title = "Singapore Merchandise Imports with Major Partners",
+                SubTitle = "2020 - 2022",
+                Caption = "Singstat.gov.sg")
+
+country_export_long <- export %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%
+  pivot_longer(                                                       #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = -c('date'), 
+     names_to = "country",
+     values_transform = as.numeric,
+     values_to = "value")
+
+p2 <- country_export_long %>% 
+  filter(date == "2022-12-01" | date == "2020-01-01") %>% 
+  mutate(date = year(date),
+         date = factor(date), 
+         value = value / 1000000000,
+         value = round(value,3)) %>%
+  newggslopegraph(date, value, country,
+                Title = "Singapore Merchandise Exports with Major Partners",
+                SubTitle = "2020 - 2022",
+                Caption = "Singstat.gov.sg")
+
+p1+p2
+
+
+
+```
+
+total_data_wide <- inner_join(import[,1:2],
+                         export[,1:2]) 
+
+
+total_data_long <- total_data_wide %>%
+  pivot_longer(                                                       #<< pivot longer to convert columns to rows with values as new numeric values column
+     cols = c('TotalMerchandiseImports','TotalMerchandiseExports'), 
+     names_to = "tradetype",
+     values_transform = as.numeric,
+     values_to = "value")
+
+head(total_data_long)
+
+head(total_data_wide)
+
+devtools::install_github('Ather-Energy/ggTimeSeries')
+
+# base plot
+p1 = ggplot(total_data_long, aes(x = date, y = value, group = tradetype, fill = tradetype)) +
+  ggTimeSeries::stat_steamgraph()
+
 
 ##Retain all countries, pick out nuances
 
-##consider using horizon graph? for countries
+
 ##cycle plot
 ##slope graphs
