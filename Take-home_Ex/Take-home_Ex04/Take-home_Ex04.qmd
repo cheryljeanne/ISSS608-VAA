@@ -208,7 +208,7 @@ The code chunk below contains the codes required to reproduce this visualization
 ```{r}
 #| warning: false
 #| fig-height: 10
-#| fig-width: 12
+#| fig-width: 15
 
 country_import_long_1 <- import %>%
   select(-2, -3, -4, -5, -6, -7, -8) %>%
@@ -251,7 +251,10 @@ country_long_1_top5 <- inner_join(country_long_1,
   group_by(year, country, Merc_Trade)  %>%                 #<< Group by PA, sum Pop into sum_Pop column
   summarise(sum_TV=sum(TradeValue),
             sum_TV_bil=sum(TradeValue_bil),
-            .groups = 'drop')
+            .groups = 'drop') %>%
+  arrange(year, desc(sum_TV))
+
+country_long_1_top5
   
 
 country_long_1_top5$tooltip <- c(paste0(     #<<
@@ -262,6 +265,19 @@ country_long_1_top5$tooltip <- c(paste0(     #<<
 p <- ggplot(country_long_1_top5, aes(fill=Merc_Trade, y=sum_TV/1000000000, x = country, label = sum_TV_bil)) +
   geom_bar_interactive(aes(tooltip = tooltip), position="stack", stat="identity") +
   geom_text(position = position_stack(vjust = 0.5), size = 2, color = "#ffffff") +
+  theme(legend.position="bottom") +
+  guides(fill=guide_legend(title="Merchandise Trade Type")) +
+  ggtitle("Singapore Merchandise Trade with Major Partners") +
+  ylab("Trade Value (in Billions)") +
+  xlab("Trade Partner (by Country))") +
+  #scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  theme(
+    axis.title = element_text(size=8), 
+    axis.text.x = element_text(size=6, angle=45, hjust = 1), 
+    legend.title = element_text(size=6), #change legend title font size
+    legend.text = element_text(size=6), 
+    legend.key.size = unit(0.25, 'cm')
+  ) + 
   facet_wrap(~ year, ncol=3)
 
 girafe(                                  #<<
