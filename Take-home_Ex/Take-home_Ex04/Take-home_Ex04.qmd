@@ -146,6 +146,7 @@ country_import_long <- import %>%
      values_transform = as.numeric,
      values_to = "import_value") %>%
   mutate(val_mil = round(import_value/1000000,1)) %>%                       #<< rounding values to millions for easy viewability
+  mutate(val_mil = format(round(as.numeric(val_mil), 1), nsmall=1, big.mark=",")) %>%
   unite("labels", country,val_mil, sep = "\n", remove = FALSE)              #<< create treemap labels
 
 p1 <- country_import_long %>%
@@ -172,6 +173,7 @@ country_export_long <- export %>%
      values_transform = as.numeric,
      values_to = "export_value") %>%
   mutate(val_mil = round(export_value/1000000,1)) %>%                       #<< rounding values to millions for easy viewability
+  mutate(val_mil = format(round(as.numeric(val_mil), 1), nsmall=1, big.mark=",")) %>%
   unite("labels", country,val_mil, sep = "\n", remove = FALSE)              #<< create treemap labels
 
 p2 <- country_export_long %>%
@@ -254,9 +256,6 @@ country_long_1_top5 <- inner_join(country_long_1,
             .groups = 'drop') %>%
   arrange(year, desc(sum_TV))
 
-country_long_1_top5
-  
-
 country_long_1_top5$tooltip <- c(paste0(     #<<
   "Country = ", country_long_1_top5$country,         #<<
   "\n Trade Type = ", country_long_1_top5$Merc_Trade,
@@ -303,6 +302,12 @@ The code chunk below contains the codes required to reproduce this visualization
 
 ```{r}
 #| warning: false
+
+#<< install development version from github
+#install.packages("remotes")
+#remotes::install_github("nsgrantham/ggbraid")
+
+
 
 ```
 
