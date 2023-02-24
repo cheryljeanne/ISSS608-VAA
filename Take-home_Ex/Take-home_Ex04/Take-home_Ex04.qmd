@@ -25,7 +25,7 @@ For the purpose of this exercise, the study period will be conducted from Januar
 #### Installing and Loading R Packages
 
 ```{r}
-pacman::p_load(readxl, dplyr, tidyverse, lubridate, knitr, patchwork, CGPfunctions, gganimate, gapminder, treemapify, ggiraph) 
+pacman::p_load(readxl, dplyr, tidyverse, lubridate, knitr, patchwork, CGPfunctions, gganimate, gapminder, treemapify, ggiraph, ggthemes) 
 ```
 
 #### Importing Data
@@ -259,7 +259,7 @@ country_long_1_top5 <- inner_join(country_long_1,
 country_long_1_top5$tooltip <- c(paste0(     #<<
   "Country = ", country_long_1_top5$country,         #<<
   "\n Trade Type = ", country_long_1_top5$Merc_Trade,
-  "\n Trade Value (bn) = $", country_long_1_top5$TradeValue_bil)) #<<
+  "\n Trade Value (bn) = $", country_long_1_top5$sum_TV_bil)) #<<
 
 p <- ggplot(country_long_1_top5, aes(fill=Merc_Trade, y=sum_TV/1000000000, x = country, label = sum_TV_bil)) +
   geom_bar_interactive(aes(tooltip = tooltip), position="stack", stat="identity") +
@@ -302,11 +302,50 @@ The code chunk below contains the codes required to reproduce this visualization
 
 ```{r}
 #| warning: false
+#| fig-height: 10
+#| fig-width: 15
 
 #<< install development version from github
 #install.packages("remotes")
 #remotes::install_github("nsgrantham/ggbraid")
 
+country_long_1_top5_wide <- inner_join(country_long_1, 
+                              top9countries) %>%
+   select(date, country, Merc_Trade, TradeValue_bil) %>%
+  pivot_wider(names_from = Merc_Trade,
+             values_from = TradeValue_bil)
+
+country_long_1_top5_long <- inner_join(country_long_1, 
+                              top9countries)
+
+library(ggbraid)
+library(ggplot2)
+
+
+head(country_long_1_top5_long)
+
+ggplot() +
+  geom_line(aes(date, TradeValue_bil, linetype = Merc_Trade), data = country_long_1_top5_long, size=1) +
+  geom_braid(aes(x = date,
+                  ymin = import,
+                  ymax = export,
+                  fill = import < export), 
+                  data = country_long_1_top5_wide,
+              alpha = 0.6
+              ) +
+  guides(linetype = "none", fill = "none") +
+  facet_wrap(~country, ncol = 5) +
+    labs(title = "Monthly Export & Import Trade Values of Top 6 Trading Partners, Jan20-Dec22",         #<< setting of Plot Title and Caption
+       caption = "Note: The shaded green area represents Export value > Import value, indicating a trade surplus. \n The shaded red area represents Export value < Import value, indicating a trade deficit.") +
+  ylab("Trade Value (in Billions)") +
+  xlab("Time period") +
+  theme(
+    axis.title = element_text(size=8), 
+    axis.text.x = element_text(size=6, angle=45, hjust = 1)
+  )
+
+  
+  
 
 
 ```
