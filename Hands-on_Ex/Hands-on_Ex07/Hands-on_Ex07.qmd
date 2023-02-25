@@ -10,3 +10,123 @@ execute:
 format: html
 editor: visual
 ---
+
+## Visualising Geospatial Point Data
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(sf, tmap, tidyverse)
+```
+
+#### Importing Data
+
+```{r}
+#| warning: false
+sgpools <- read_csv("data/aspatial/SGPools_svy21.csv")
+
+list(sgpools) 
+```
+
+#### Data Preparation
+
+```{r}
+#| warning: false
+sgpools_sf <- st_as_sf(sgpools, 
+                       coords = c("XCOORD", "YCOORD"),    #<< this combines the x (long) and y (lat) coordinate fields
+                       crs= 3414)                         #<< CRS - projection code that a country uses (SVY21)
+
+list(sgpools_sf)
+```
+
+#### Plotting
+
+Single Map
+```{r}
+#| warning: false
+tmap_mode("view") #<< "plot" = static plot of the map (no tooltip)
+
+tm_shape(sgpools_sf)+
+tm_bubbles(col = "OUTLET TYPE",          #<< split colour by outlet type
+          size = "Gp1Gp2 Winnings",      #<< shape size by winnings
+          border.col = "black",          #<< shape border
+          border.lwd = 1)
+```
+
+Double Map
+```{r}
+#| warning: false
+tm_shape(sgpools_sf) +
+  tm_bubbles(col = "OUTLET TYPE", 
+          size = "Gp1Gp2 Winnings",
+          border.col = "black",
+          border.lwd = 1) +
+  tm_facets(by= "OUTLET TYPE",           #<< facetting by outlet type
+            nrow = 1,
+            sync = TRUE)
+
+tmap_mode("plot")
+```
+
+
+
+## Choropleth Mapping
+
+### Installing and Loading R Packages
+
+```{r}
+pacman::p_load(sf, tmap, tidyverse)
+```
+
+#### Importing Data
+
+```{r}
+#| warning: false
+mpsz <- st_read(dsn = "data/geospatial", 
+                layer = "MP14_SUBZONE_WEB_PL")
+
+popdata <- read_csv("data/aspatial/respopagesextod2011to2020.csv")
+```
+
+#### Data Preparation
+
+```{r}
+#| warning: false
+popdata2020 <- popdata %>%
+  filter(Time == 2020) %>%                    #<< only use 2020 data
+  group_by(PA, SZ, AG) %>%                    #<< group by PA, SZ, AG
+  summarise(`POP` = sum(`Pop`)) %>%           #<< sum Pop
+  ungroup()%>%
+  pivot_wider(names_from=AG,                  #<< change to wide data format - AG into columns
+              values_from=POP) %>%
+  mutate(YOUNG = rowSums(.[3:6])              #<< create new columns, sum rows by index
+         +rowSums(.[12])) %>%
+mutate(`ECONOMY ACTIVE` = rowSums(.[7:11])+ 
+rowSums(.[13:15]))%>%
+mutate(`AGED`=rowSums(.[16:21])) %>%
+mutate(`TOTAL`=rowSums(.[3:21])) %>%  
+mutate(`DEPENDENCY` = (`YOUNG` + `AGED`)
+/`ECONOMY ACTIVE`) %>%
+  select(`PA`, `SZ`, `YOUNG`, 
+       `ECONOMY ACTIVE`, `AGED`, 
+       `TOTAL`, `DEPENDENCY`)
+
+popdata2020 <- popdata2020 %>%
+  mutate_at(.vars = vars(PA, SZ), 
+          .funs = funs(toupper)) %>%          #<< function converts all values to upper case
+  filter(`ECONOMY ACTIVE` > 0)
+
+#<< left side needs to be spatial data, else geometric map will be dropped- left join data with mapping coordinates
+mpsz_pop2020 <- left_join(mpsz, popdata2020,            
+                          by = c("SUBZONE_N" = "SZ")) #<< sequence of field join has to follow the table sequence
+
+write_rds(mpsz_pop2020, "data/rds/mpszpop2020.rds")
+```
+
+#### Plotting
+
+```{r}
+tmap_mode("plot")
+qtm(mpsz_pop2020, 
+    fill = "DEPENDENCY")
+```
