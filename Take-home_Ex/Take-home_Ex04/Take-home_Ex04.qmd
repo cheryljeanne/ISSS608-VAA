@@ -254,7 +254,7 @@ top5countries <- country_long_1 %>%                                         #<< 
   summarise(sum_TV=sum(TradeValue),
             .groups = 'drop') %>%
   arrange(desc(sum_TV)) %>%                                                 #<< Sort countries by trade value in descending order
-  slice(0:5)                                                                #<< select top 5 countries
+  slice(0:15)                                                                #<< select top 5 countries
 
 #<< Inner join back to main dataset to get full data only for the Top 5 countries
 country_long_1_top5 <- inner_join(country_long_1, 
@@ -290,7 +290,7 @@ p <- ggplot(country_long_1_top5,
     legend.text = element_text(size=8), 
     legend.key.size = unit(0.3, 'cm')
   ) + 
-  facet_wrap(~ year, ncol=3) 
+  facet_wrap(~ year, nrow=3) ##increasing countries to 15 instead? 
 
 girafe(                                  
   ggobj = p,                             
