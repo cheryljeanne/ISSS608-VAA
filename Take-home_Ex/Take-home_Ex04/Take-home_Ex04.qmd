@@ -17,7 +17,7 @@ This Take-Home Exercise seeks to uncover the impact of COVID-19 as well as the g
 
 The dataset selected for this exercise is sourced from [Singstat.gov.sg](https://www.singstat.gov.sg/find-data/search-by-theme/trade-and-investment/merchandise-trade/latest-data) and contains data on the *Merchandise Imports and Exports by Region / Market*.
 
-For the purpose of this exercise, the study period will be conducted from January 2020 to December 2022.
+For the purpose of this exercise, the study period will be conducted from **January 2020 to December 2022**.
 
 # 2. Data Visualization
 
@@ -46,7 +46,7 @@ export_data <- read_xlsx("data/outputFile.xlsx",
 
 #### Data Preparation / Data Output
 
-This code chunk attempts to prepare the data set into a visualization friendly format. The base data set is in a **wide data format.** Depending on the requirements of the selected analytical visualisation plots, the data set may be further manipulated in the respective sections below.
+This code chunk attempts to prepare the data set into a visualization friendly format. The base post-wrangled data set is in a **wide data format.** Depending on the requirements of the selected analytical visualisation plots, the data set may be further manipulated in the respective sections below.
 
 ::: panel-tabset
 ## Import Dataset
@@ -124,9 +124,14 @@ kable(head(export))
 ```
 :::
 
+
 ## TREEMAP ANIMATION: BY COUNTRIES
 
 #### Selection & Design Consideration
+
+The **treemap plot** has been selected to visualize Singapore's largest trading partners by import and export values:
+
+• Treemaps are able to effectively depict the relative sizes of a country's trade value at a high level, allowing for quick perception of the countries that are large contributors. • The sequential colour scale helps the user easily identify larger trading partner countries compared to other countries in the same group. • An animation mapping feature has also been incorporated to allow users to visually see the changes across the time period.
 
 #### Reproducible Procedures
 
@@ -200,17 +205,24 @@ anim_save("animated_treemap_export.gif", p2, nframes = 216, width = 600, height 
 
 ```
 
-::: {layout-ncol="2"} 
+::: {layout-ncol="2"}
 ![SG Trade Imports: Jan 2020 - Dec 2022](animated_treemap_import.gif){fig-align="center"}
 
-![SG Trade Exports: Jan 2020 - Dec 2022](animated_treemap_export.gif){fig-align="center"} 
+![SG Trade Exports: Jan 2020 - Dec 2022](animated_treemap_export.gif){fig-align="center"}
 :::
 
 #### Patterns Revealed by Visualisation
 
-## STACKED BAR CHART: TOP 6 TRADING PARTNERS
+**China, Malaysia, Taiwan, United States** are Singapore's major trading partners.
+
+This has not significantly changed during the COVID-19 period. From the trade value displayed within the treemap grids, the COVID-19 effect was evident, where both import and export values of the top countries ranged around \$5bn at the peak of the COVID-19 period (year 2020), before rising to \~\$7bn in the years after.
+
+## STACKED BAR CHART: TOP 15 TRADING PARTNERS
 
 #### Selection & Design Consideration
+
+The **stacked bar chart** has been selected to allow for easy comparison between countries. Given that the bars are proportional to the values represented, there was a risk that the countries with extreme high trading values would result in the data for "smaller countries" being compressed and hence hidden. As such, I decided to transform the dataset by using **rate of change in %** instead. This would allow for ease of comparison over the given time period between the countries based on % values. An interactive tooltip element was added as well to provide additional complementary information for users, displaying trade value in dollar terms as well as other associated information to the bar on hover. 
+
 
 #### Reproducible Procedures
 
@@ -218,25 +230,30 @@ The code chunk below contains the codes required to reproduce this visualization
 
 ```{r}
 #| warning: false
-#| fig-height: 10
+#| fig-height: 20
 #| fig-width: 15
 
-#<< PREPARING DATASET IN LONG FORMAT
 country_import_long_1 <- import %>%
   select(-2, -3, -4, -5, -6, -7, -8) %>%                                    #<< remove uninterested columns (total, regional)
+  mutate(year = year(date)) %>%                                             #<< aggregate and sum values by year
+  aggregate(.~year, sum) %>%                                                
   pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
-     cols = -c('date'), 
+     cols = -c('date','year'), 
      names_to = "country",
      values_transform = as.numeric,
-     values_to = "import")
+     values_to = "import") %>%
+  select(-c('date'))
 
 country_export_long_1 <- export %>%
   select(-2, -3, -4, -5, -6, -7, -8) %>%                                    #<< remove uninterested columns (total, regional)
+  mutate(year = year(date)) %>%                                             #<< aggregate and sum values by year
+  aggregate(.~year, sum) %>%                                                
   pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
-     cols = -c('date'), 
+     cols = -c('date','year'), 
      names_to = "country",
      values_transform = as.numeric,
-     values_to = "export")
+     values_to = "export") %>%
+  select(-c('date'))
 
 country_long_1 <- inner_join(country_export_long_1,                         #<< combining import and export dataset
                              country_import_long_1) %>%             
@@ -245,44 +262,47 @@ country_long_1 <- inner_join(country_export_long_1,                         #<< 
      names_to = "Merc_Trade",
      values_transform = as.numeric,
      values_to = "TradeValue") %>%
-  mutate(TradeValue_bil = round(TradeValue/1000000000,1))                   #<< rounding value to billions
+    group_by(country, Merc_Trade) %>% 
+  arrange(year, country, Merc_Trade) %>% 
+  mutate(rateofchange                                                       #<< derive rate of change column
+         = 100 * (TradeValue - lag(TradeValue))/lag(TradeValue),
+         rateofchange = round(rateofchange,1)) %>%
+  ungroup() %>%
+  filter(year != 2020)                                                      #<< remove year 2020 as ROC will be NULL
 
-
-top5countries <- country_long_1 %>%                                         #<< Derive Top 5 trading partner countries during period
+top15countries <- country_long_1 %>%                                        #<< Derive Top 5 trading partner countries during period
   select(country, TradeValue) %>%                                           
   group_by(country)  %>%                                                    #<< Group by countries , sum import / export
   summarise(sum_TV=sum(TradeValue),
             .groups = 'drop') %>%
   arrange(desc(sum_TV)) %>%                                                 #<< Sort countries by trade value in descending order
-  slice(0:15)                                                                #<< select top 5 countries
+  slice(0:15)                                                               #<< select top 15 countries
 
 #<< Inner join back to main dataset to get full data only for the Top 5 countries
-country_long_1_top5 <- inner_join(country_long_1, 
-                              top5countries) %>%
-  mutate(year = year(date)) %>%
-  select(year, country, Merc_Trade, TradeValue, TradeValue_bil) %>%               
-  group_by(year, country, Merc_Trade)  %>%                                  #<< derive trade values grouped by year, country and trade type
-  summarise(sum_TV=sum(TradeValue),
-            sum_TV_bil=sum(TradeValue_bil),
-            .groups = 'drop') %>%
-  arrange(year, desc(sum_TV))
+country_long_1_top15 <- inner_join(country_long_1, 
+                              top15countries) %>%
+  mutate(TradeValue_bil = round(TradeValue/1000000000,1)) 
 
-country_long_1_top5$tooltip <- c(paste0(                                    #<< Creating annotations for tooltip
-  "Country = ", country_long_1_top5$country,
-  "\n Trade Type = ", country_long_1_top5$Merc_Trade,
-  "\n Trade Value (bn) = $", country_long_1_top5$sum_TV_bil))
+country_long_1_top15$tooltip <- c(paste0(                                   #<< Creating annotations for tooltip
+  "Country = ", country_long_1_top15$country,
+  "\n Trade Type = ", country_long_1_top15$Merc_Trade,
+  "\n Trade Value (bn) = $", country_long_1_top15$TradeValue_bil,
+  "\n Rate of % Change from prev year = ", country_long_1_top15$rateofchange))
 
-p <- ggplot(country_long_1_top5, 
-            aes(fill=Merc_Trade, y=sum_TV/1000000000, x = country, label = sum_TV_bil)) +
+p <- ggplot(country_long_1_top15,                                 
+            aes(fill=Merc_Trade, y=rateofchange, x = country, 
+                label = rateofchange)) +
   hrbrthemes::theme_ipsum(grid="Y") +
-  geom_bar_interactive(aes(tooltip = tooltip), position="stack", stat="identity") +
-  geom_text(position = position_stack(vjust = 0.5), size = 2, color = "#ffffff") +
-  theme(legend.position="bottom") +
+  geom_bar_interactive(                                                     #<< plotting interactive stacked bar
+    aes(tooltip = tooltip), position="stack", stat="identity") +
+  geom_text(
+    position = position_stack(vjust = 0.5), size = 2, color = "#ffffff") +
+  theme(legend.position="bottom") +                                         #<< setting of themes, titles and legends
   guides(fill=guide_legend(title="Merchandise Trade Type")) +
-  ggtitle("Singapore Merchandise Trade with Major Partners") +
-  ylab("Trade Value (in Billions)") +
+  ggtitle("Changes in SG Merchandise Trade: Top 15 Countries (2020-2022)") +
+  ylab("Rate of Change in %") +
   xlab("Trade Partner (by Country))") +
-  #scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  labs(caption = "Note:2021 represents the rate of % change from 2020 to 2021 by import / export trade type.\n2022 represents the rate of % change from 2021 to 2022 by import / export trade type.") +
   theme(
     axis.title = element_text(size=8), 
     axis.text.x = element_text(size=8, angle=45, hjust = 0.75), 
@@ -290,20 +310,26 @@ p <- ggplot(country_long_1_top5,
     legend.text = element_text(size=8), 
     legend.key.size = unit(0.3, 'cm')
   ) + 
-  facet_wrap(~ year, nrow=3) ##increasing countries to 15 instead? 
+  facet_wrap(~ year, ncol = 1)                                              #<< facet wrap for trellis plot 
 
 girafe(                                  
   ggobj = p,                             
-  width_svg = 6,                        
-  height_svg = 6*0.618                    
-)                                       
+  width_svg = 8,                        
+  height_svg = 8                   
+)     
+
 ```
 
 #### Patterns Revealed by Visualisation
 
-## TOP 6 TRADING PARTNERS CYCLE PLOT
+An interesting insight that was observed was that although Hong Kong is one of the top export countries for Singapore, **exports to Hong Kong actually dropped year on year** during the COVID-19 period. On the flipside, the UAE is ranked 13th out of the top 15 trading partners of Singapore, but the **rate of change for both imports and exports ranked the highest** amongst the countries. 
+
+
+## LINE PLOT: TOP 15 TRADING PARTNERS TIME SERIES
 
 #### Selection & Design Consideration
+
+A **line chart in a trellis format** was selected to depict the time series trends of export and import trades.The differences between import and export values was also highlighted in a color coordinated format to allow the user to visually identify if the trading partner was a net exporter or importer (i.e., green: export > import, red: import > export).
 
 #### Reproducible Procedures
 
@@ -318,30 +344,65 @@ The code chunk below contains the codes required to reproduce this visualization
 #install.packages("remotes")
 #remotes::install_github("nsgrantham/ggbraid")
 
-#<< use dataframe from previous plot to create a wide data format
-country_long_1_top5_wide <- inner_join(country_long_1, 
-                              top5countries) %>%
+#<< PREPARING DATASET IN LONG FORMAT
+country_import_long_1 <- import %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%                                    #<< remove uninterested columns (total, regional)
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+    cols = -c('date'), 
+    names_to = "country",
+    values_transform = as.numeric,
+    values_to = "import")
+
+country_export_long_1 <- export %>%
+  select(-2, -3, -4, -5, -6, -7, -8) %>%                                    #<< remove uninterested columns (total, regional)
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+    cols = -c('date'), 
+    names_to = "country",
+    values_transform = as.numeric,
+    values_to = "export") 
+
+country_long_1 <- inner_join(country_export_long_1,                         #<< combining import and export dataset
+                             country_import_long_1) %>%             
+  pivot_longer(                                                             #<< pivot longer to convert columns to rows with values as new numeric values column
+    cols = c('export', 'import'), 
+    names_to = "Merc_Trade",
+    values_transform = as.numeric,
+    values_to = "TradeValue") %>%
+  mutate(TradeValue_bil = round(TradeValue/1000000000,1))                   #<< rounding value to billions
+
+top15countries <- country_long_1 %>%                                        #<< Derive Top 5 trading partner countries during period
+  select(country, TradeValue) %>%                                           
+  group_by(country)  %>%                                                    #<< Group by countries , sum import / export
+  summarise(sum_TV=sum(TradeValue),
+            .groups = 'drop') %>%
+  arrange(desc(sum_TV)) %>%                                                 #<< Sort countries by trade value in descending order
+  slice(0:15)                                                               #<< select top 15 countries
+
+#<< create a wide data format
+country_long_1_top15_wide <- inner_join(country_long_1, 
+                              top15countries) %>%
    select(date, country, Merc_Trade, TradeValue_bil) %>%
    pivot_wider(names_from = Merc_Trade,
              values_from = TradeValue_bil)
 
-#<< create long dataset for top 5 countries
+#<< create long dataset for top 15 countries
 country_long_1_top5_long <- inner_join(country_long_1, 
-                              top5countries)
+                              top15countries)
 
 ggplot() +
-  geom_line(aes(date, TradeValue_bil, linetype = Merc_Trade), data = country_long_1_top5_long, size=1) +
-  ggbraid::geom_braid(aes(x = date,
+  geom_line(aes(date, TradeValue_bil, linetype = Merc_Trade),               #<< plotting geomline, with Merc_Trade to distinguish the lines
+            data = country_long_1_top5_long, size=1) +
+  ggbraid::geom_braid(aes(x = date,                                         #<< using geom_braid to highlight the areas between the 2 lines
                   ymin = import,
                   ymax = export,
                   fill = import < export), 
-                  data = country_long_1_top5_wide,
+                  data = country_long_1_top15_wide,
               alpha = 0.6
               ) +
   guides(linetype = "none", fill = "none") +
-  hrbrthemes::theme_ipsum(grid="Y") +
-  facet_wrap(~country, ncol = 5) +
-    labs(title = "Monthly Export & Import Trade Values \nTop 6 Trading Partners (Jan20-Dec22)",
+  hrbrthemes::theme_ipsum(grid="Y") +                                       #<< setting of plot theme
+  facet_wrap(~country, ncol = 5) +                                          #<< facet wrap for trellis plot
+    labs(title = "Monthly Export & Import Trade Values: Top 6 Trading Partners (Jan20-Dec22)",
          caption = "Note: The shaded green area represents Export value > Import value, indicating a trade surplus. \n The shaded red area represents Export value < Import value, indicating a trade deficit.") +
   ylab("Trade Value (in Billions)") +
   xlab("Time period") +
@@ -355,54 +416,10 @@ ggplot() +
 
 #### Patterns Revealed by Visualisation
 
+• Singapore's exports outweighs imports. 
 
+Visually from the plot, it is evident that the green area marginally appears more than the red area. This implies that singapore's exports outweigh imports. This finding is consistent with the trade summary referenced from [World Bank.org](https://wits.worldbank.org/CountrySnapshot/en/SGP/textview#:~:text=Singapore%2C%20Imports%20of%20goods%20and,percentage%20of%20GDP%20is%20176.24%20%25.).
 
-TOP 15Countries
-```{r}
-#| warning: false
-#| fig-height: 15
-#| fig-width: 20
+• Exports to some countries grew during COVID-19 period
 
-top5countries <- country_long_1 %>%                                         #<< Derive Top 5 trading partner countries during period
-  select(country, TradeValue) %>%                                           
-  group_by(country)  %>%                                                    #<< Group by countries , sum import / export
-  summarise(sum_TV=sum(TradeValue),
-            .groups = 'drop') %>%
-  arrange(desc(sum_TV)) %>%                                                 #<< Sort countries by trade value in descending order
-  slice(0:15)   
-
-#<< use dataframe from previous plot to create a wide data format
-country_long_1_top5_wide <- inner_join(country_long_1, 
-                              top5countries) %>%
-   select(date, country, Merc_Trade, TradeValue_bil) %>%
-   pivot_wider(names_from = Merc_Trade,
-             values_from = TradeValue_bil)
-
-#<< create long dataset for top 5 countries
-country_long_1_top5_long <- inner_join(country_long_1, 
-                              top5countries)
-
-ggplot() +
-  geom_line(aes(date, TradeValue_bil, linetype = Merc_Trade), data = country_long_1_top5_long, size=1) +
-  ggbraid::geom_braid(aes(x = date,
-                  ymin = import,
-                  ymax = export,
-                  fill = import < export), 
-                  data = country_long_1_top5_wide,
-              alpha = 0.6
-              ) +
-  guides(linetype = "none", fill = "none") +
-  hrbrthemes::theme_ipsum(grid="Y") +
-  facet_wrap(~country, ncol = 5) +
-    labs(title = "Monthly Export & Import Trade Values \nTop 6 Trading Partners (Jan20-Dec22)",
-         caption = "Note: The shaded green area represents Export value > Import value, indicating a trade surplus. \n The shaded red area represents Export value < Import value, indicating a trade deficit.") +
-  ylab("Trade Value (in Billions)") +
-  xlab("Time period") +
-  theme(
-    axis.title = element_text(size=8), 
-    axis.text.x = element_text(size=6, angle=45, hjust = 1)
-  )
-
-
-```
-
+Zooming into the Mainland China, United States and Republic of Korea plot, from the 1st quarter of 2020, exports to these countries grew during the height of the pandemic before leveling off subsequently. In the case of Korea and US, the leveling off occurred earlier in 2021, while China only started in 2022, likely due to China's delayed post-pandemic opening.
