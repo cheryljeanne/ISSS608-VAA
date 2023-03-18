@@ -258,5 +258,5 @@ visNetwork(GAStech_nodes,
   visOptions(highlightNearest = TRUE,
              nodesIdSelection = TRUE) %>%
   visLegend() %>%
-  visLayout(randomSeed = 123)
+  visLayout(randomSeed = 123)              #<< random seed is set so that the layout can be retained
 ```
