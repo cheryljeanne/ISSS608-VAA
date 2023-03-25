@@ -12,10 +12,11 @@ final_swimmers_full <- inner_join(swimdata, final_swimmers) %>%
   mutate(Semi = period_to_seconds(ms(Semi)), 
          Final = period_to_seconds(ms(Final)),
          Heat = period_to_seconds(ms(Heat)),
+         HeattoSemi = (Heat-Semi)/Heat,
          SemitoFinal = (Semi-Final)/Semi,
          HeattoFinal = (Heat-Final)/Heat
   ) %>%
-  pivot_longer(cols = c("SemitoFinal", "HeattoFinal"), 
+  pivot_longer(cols = c("HeattoSemi","SemitoFinal", "HeattoFinal"), 
                names_to = "RoundsCompare",
                values_transform = as.numeric,
                values_to = "Time")
@@ -39,8 +40,22 @@ plot <- ggplot(swimdata, aes(Time, colour = RoundsCompare)) +
   theme_classic() +
   geom_vline(xintercept=mean(swimdata$Time, na.rm=TRUE), linetype="dashed", color = "red") +
   annotate("text", x= -0.001, y=1, label="Avg Improvement in \nFinals Swim Time", size=2.5, color = "red", angle=0)
+
+
+
   
-ggly <- ggplotly(plot)
+ggly <- ggplotly(ggplot(subset(swimdata), aes(Time, colour = RoundsCompare)) + 
+                   stat_ecdf(geom = "point")+
+                   labs(title="Probability of Improvement in Finals Performance",
+                        y = "Cumulative Distribution Function", 
+                        x = "% Improvement in Swim Time") +
+                   theme_classic() +
+                   geom_vline(xintercept=mean(swimdata$Time, na.rm=TRUE), linetype="dashed", color = "red") +
+                   annotate("text", x= -0.001, y=1, label="Avg Improvement in \nFinals Swim Time", size=2.5, color = "red", angle=0)
+                 )
+
+
+ggly
 
 text_xHF <- number(
   ggly$x$data[[1]]$x,
@@ -72,9 +87,27 @@ text_ySF <- number(
   suffix = "%"
 )
 
+text_xHS <- number(
+  ggly$x$data[[3]]$x,
+  scale = 100,
+  suffix = "% Improvement in Swim Time",
+  accuracy = 0.01
+)
+
+text_yHS <- number(
+  ggly$x$data[[3]]$y,
+  scale = 100,
+  accuracy = 0.1,
+  prefix = "Cumul. distribution: ",
+  suffix = "%"
+)
+
 ggly %>%
   style(text = paste0(text_xHF, "</br></br>", text_yHF), traces = 1) %>%
-  style(text = paste0(text_xSF, "</br></br>", text_ySF), traces = 2)
+  style(text = paste0(text_xSF, "</br></br>", text_ySF), traces = 2) %>%
+  style(text = paste0(text_xHS, "</br></br>", text_yHS), traces = 3)
+
+ggly$x
 
 #>>Pass in slider scale for fractional improvement range?
 #>Filter for rounds compare multi select
@@ -120,16 +153,18 @@ data <- data[,c(1,2,4,3)]
 
 ##>> CI Visualization
 
-final_swimmers_full %>%
+swimdata %>%
   ggplot(aes(x = RoundsCompare, 
              y = Time)) +
   stat_gradientinterval(   
-    fill = "skyblue",      
-    show.legend = TRUE     
+    fill = "skyblue"
   ) +                        
   labs(
-    title = "Visualising confidence intervals of Improvement in Performances between Swim Rounds",
-    subtitle = "Gradient + interval plot")
+    title = "Confidence Intervals of Improvement in Performances between Swim Rounds",
+    subtitle = "Gradient + interval plot - Line width is defined at 66% and 95% intervals respectively.") +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14,face="bold")
+  )
 
 #>> 2 Sample T-Test based on Fractional Performance Improvement
 #>> P-value is < 0.05, reject the null hypothesis that there's no difference between the means
@@ -153,7 +188,7 @@ ggbetweenstats(
 
 #>>pass in input parameter for % CI 
 
-final_swimmers_full %>% 
+swimdata %>% 
   select(RoundsCompare, Time) %>%
   ggplot(aes(x = Time, y = RoundsCompare)) +
   stat_cdfinterval() +
